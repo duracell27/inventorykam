@@ -23,3 +23,28 @@ code {
     monospace;
 }
 
+.display-none{
+  display: none;
+}
+.menubtn{
+  @apply p-2 text-white bg-red-950 cursor-pointer rounded-lg
+}
+
+.navLink__active{
+  @apply bg-red-950 p-1 px-4 text-white rounded-full cursor-pointer text-center text-lg
+}
+
+.navLink{
+  @apply text-lg text-red-950 rounded-full cursor-pointer text-center
+}
+
+.statusSuccess{
+  @apply bg-green-700
+}
+.statusVarning{
+  @apply bg-orange-500
+}
+.statusDanger{
+  @apply bg-red-700
+}
+
