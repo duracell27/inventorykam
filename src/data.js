@@ -7,7 +7,7 @@ export const data = [
     status: "Працює",
     place: "Бельведерська",
     subplace: "Кладова",
-    category: "Відеонагляд",
+    category: "Тв",
     name: "Відеореєстратор",
   },
   {
@@ -29,7 +29,7 @@ export const data = [
     status: "Працює",
     place: "Бельведерська",
     subplace: "Кладова",
-    category: "Відеонагляд",
+    category: "Монітор",
     name: "Мишка до відеонагляду",
   },
   {

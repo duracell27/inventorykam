@@ -11,17 +11,17 @@ const getFormattedDate = () => {
   return formattedDate;
 };
 
-const AddInventory = () => {
-  const [name, setName] = useState("");
-  const [firm, setFirm] = useState("");
-  const [model, setModel] = useState("");
-  const [serial, setSerial] = useState("");
-  const [date, setDate] = useState(getFormattedDate());
-  const [varanty, setVaranty] = useState("");
-  const [status, setStatus] = useState("Виберіть");
-  const [place, setPlace] = useState("Виберіть");
-  const [subplace, setSubplace] = useState("Виберіть");
-  const [category, setCategory] = useState("Виберіть");
+const AddInventory = ({edit, itemToEdit}) => {
+  const [name, setName] = useState(itemToEdit?.name || "");
+  const [firm, setFirm] = useState(itemToEdit?.firm || "");
+  const [model, setModel] = useState(itemToEdit?.model || "");
+  const [serial, setSerial] = useState(itemToEdit?.serial || "");
+  const [date, setDate] = useState(itemToEdit?.date || getFormattedDate());
+  const [varanty, setVaranty] = useState(itemToEdit?.varanty || "");
+  const [status, setStatus] = useState(itemToEdit?.status || "Виберіть");
+  const [place, setPlace] = useState(itemToEdit?.place || "Виберіть");
+  const [subplace, setSubplace] = useState(itemToEdit?.subplace || "Виберіть");
+  const [category, setCategory] = useState(itemToEdit?.category || "Виберіть");
 
   const handleSubmit = () => {
     const answers = {
@@ -54,7 +54,7 @@ const AddInventory = () => {
     <div className="flex flex-col w-full items-center bg-yellow-50">
       <div className="formWrapper max-w-xs">
         <h1 className="text-2xl text-center p-2 text-red-950">
-          <strong>Додати Інвентар</strong>
+          <strong>{edit? "Редагувати ":"Додати "} Інвентар</strong>
         </h1>
         <label>
           Назва виробу
@@ -187,7 +187,7 @@ const AddInventory = () => {
           onClick={handleSubmit}
           className="bg-red-950 text-white p-2 rounded-lg my-4 w-full"
         >
-          Додати
+          {edit? 'Редагувати':'Додати'}
         </button>
       </div>
     </div>

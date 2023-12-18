@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const colorsForStatus = {
   Працює: "bg-green-600",
@@ -10,9 +11,12 @@ const colorsForStatus = {
 };
 
 const ItemCard = ({ item }) => {
-  const [modalVisible, setModalVisible] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false);
   return (
-    <div className=" border border-red-950 rounded-xl cursor-pointer bg-yellow-100 w-[320px] shadow-md relative" onClick={()=>setModalVisible(!modalVisible)}>
+    <div
+      className=" border border-red-950 rounded-xl cursor-pointer bg-yellow-100 w-[320px] shadow-md relative"
+      onClick={() => setModalVisible(!modalVisible)}
+    >
       <div className="flex justify-between w-full items-center p-2">
         <div>
           <p className="text-lg text-red-950 leading-4">{item.name}</p>
@@ -31,11 +35,31 @@ const ItemCard = ({ item }) => {
       </span>
       <div className="border-b-[1px] border-red-950"></div>
       <div className="px-2 items-center">
-        {item.place} {item.subplace ? (<span className="text-xs">{` -> ${item.subplace}`}</span>):''}
+        {item.place}{" "}
+        {item.subplace ? (
+          <span className="text-xs">{` -> ${item.subplace}`}</span>
+        ) : (
+          ""
+        )}
       </div>
-      <div className={`${modalVisible ? 'block': 'hidden'} border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100`}>
-        <div className="text-center"><strong>Загальна інформація</strong></div>
-        {Object.keys(item).map((itemKey)=><span key={itemKey} className="text-xs block py-1 "> <strong>{itemKey}</strong> : {item[itemKey]}</span>)}
+      <div
+        className={`${
+          modalVisible ? "block" : "hidden"
+        } border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100`}
+      >
+        <div className="text-center">
+          <strong>Загальна інформація</strong>
+        </div>
+        {Object.keys(item).map((itemKey) => (
+          <span key={itemKey} className="text-xs block py-1 ">
+            {" "}
+            <strong>{itemKey}</strong> : {item[itemKey]}
+          </span>
+        ))}
+        <div className="flex justify-around text-white my-2">
+          <Link to={`/edit/${item.name}`} className="statusInfo cursor-pointer px-2 rounded-lg">редагувати</Link>
+          <button className="statusDanger cursor-pointer px-2 rounded-lg">видалити</button>
+        </div>
       </div>
     </div>
   );
