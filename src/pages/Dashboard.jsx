@@ -1,16 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { data } from "./../data";
 import ItemCard from "../componets/ItemCard";
+import axios from 'axios'
 
 const Dashboard = () => {
-  const [items, setItems] = useState(data);
+  const [items, setItems] = useState([]);
   const [selectedShop, setSelectedShop] = useState("Всі");
   const [selectedCategory, setSelectedCategory] = useState("Виберіть");
-  // console.log(items.filter((item)=>item.status == 'В ремонті'));
 
-  // console.log(items[3].status)
-  // console.log("В ремонті")
-  // console.log("В ремонті" === items[3].status)
+  const config = {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json"
+    },
+    auth: {
+      username: 'vs',
+      password: '27071996uA'
+    }
+  };
+  useEffect(()=>{
+    axios.get('https://inventory.dev.web.kameya.if.ua/app/item', config).then((res)=>{
+      if(res.status === 200){
+        setItems(res.data)
+      }
+    })
+  },[])
+
+  console.log(items)
 
   return (
     <>
@@ -26,7 +42,7 @@ const Dashboard = () => {
                 .filter((item) => item.status === "В ремонті")
                 .map((item) => (
                   <ItemCard
-                    key={item.timeStamp}
+                    key={item.id}
                     item={item}
                     statusColor={"statusVarning"}
                   />
@@ -45,7 +61,7 @@ const Dashboard = () => {
                 .filter((item) => item.status === "Зламаний")
                 .map((item) => (
                   <ItemCard
-                    key={item.timeStamp}
+                    key={item.id}
                     item={item}
                     statusColor={"statusDanger"}
                   />
@@ -107,7 +123,7 @@ const Dashboard = () => {
                         return item.category === selectedCategory;
                       }
                 })
-                .map((item, idx) => <ItemCard key={item.timeStamp+idx} item={item} />)}
+                .map((item, idx) => <ItemCard key={item.id} item={item} />)}
           </div>
         </section>
       </div>

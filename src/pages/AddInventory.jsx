@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from 'axios';
 
 const getFormattedDate = () => {
   let currentDate = new Date();
@@ -11,17 +12,49 @@ const getFormattedDate = () => {
   return formattedDate;
 };
 
-const AddInventory = ({edit, itemToEdit}) => {
-  const [name, setName] = useState(itemToEdit?.name || "");
-  const [firm, setFirm] = useState(itemToEdit?.firm || "");
-  const [model, setModel] = useState(itemToEdit?.model || "");
-  const [serial, setSerial] = useState(itemToEdit?.serial || "");
-  const [date, setDate] = useState(itemToEdit?.date || getFormattedDate());
-  const [varanty, setVaranty] = useState(itemToEdit?.varanty || "");
-  const [status, setStatus] = useState(itemToEdit?.status || "Виберіть");
-  const [place, setPlace] = useState(itemToEdit?.place || "Виберіть");
-  const [subplace, setSubplace] = useState(itemToEdit?.subplace || "Виберіть");
-  const [category, setCategory] = useState(itemToEdit?.category || "Виберіть");
+const config = {
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json"
+  },
+  auth: {
+    username: 'vs',
+    password: '27071996uA'
+  }
+};
+
+const AddInventory = ({ edit, id }) => {
+
+  const [name, setName] = useState("");
+  const [firm, setFirm] = useState("");
+  const [model, setModel] = useState("");
+  const [serial, setSerial] = useState("");
+  const [date, setDate] = useState(getFormattedDate());
+  const [varanty, setVaranty] = useState("");
+  const [status, setStatus] = useState("Виберіть");
+  const [place, setPlace] = useState("Виберіть");
+  const [subplace, setSubplace] = useState("Виберіть");
+  const [category, setCategory] = useState("Виберіть");
+
+  useEffect(() => {
+    if (edit && id) {
+      axios.get(`https://inventory.dev.web.kameya.if.ua/app/item/${id}`, config).then((res) => {
+        console.log(res.data)
+        if (res.status === 200) {
+          setName(res.data.name)
+          setFirm(res.data.firm)
+          setModel(res.data.model)
+          setSerial(res.data.serial)
+          setDate(getFormattedDate(res.data.date))
+          setVaranty(res.data.varanty)
+          setStatus(res.data.status)
+          setPlace(res.data.place)
+          setSubplace(res.data.subplace)
+          setCategory(res.data.category)
+        }
+      })
+    }
+  }, [edit,id])
 
   const handleSubmit = () => {
     const answers = {
@@ -36,17 +69,22 @@ const AddInventory = ({edit, itemToEdit}) => {
       subplace,
       category,
     };
-    
-    setName("");
-    setFirm("");
-    setModel("");
-    setSerial("");
-    setDate(getFormattedDate());
-    setVaranty("");
-    setStatus("Виберіть");
-    setPlace("Виберіть");
-    setSubplace("Виберіть");
-    setCategory("Виберіть");
+    if(edit && id){
+      axios.put(`https://inventory.dev.web.kameya.if.ua/app/item/${id}`, answers, config).then((res)=>console.log('edit',res))
+    }else{
+       axios.post(`https://inventory.dev.web.kameya.if.ua/app/item`, answers, config).then((res)=>console.log('edit',res))
+    }
+
+    // setName("");
+    // setFirm("");
+    // setModel("");
+    // setSerial("");
+    // setDate(getFormattedDate());
+    // setVaranty("");
+    // setStatus("Виберіть");
+    // setPlace("Виберіть");
+    // setSubplace("Виберіть");
+    // setCategory("Виберіть");
     return answers;
   };
 
@@ -54,7 +92,7 @@ const AddInventory = ({edit, itemToEdit}) => {
     <div className="flex flex-col w-full items-center bg-yellow-50">
       <div className="formWrapper max-w-xs">
         <h1 className="text-2xl text-center p-2 text-red-950">
-          <strong>{edit? "Редагувати ":"Додати "} Інвентар</strong>
+          <strong>{edit ? "Редагувати " : "Додати "} Інвентар</strong>
         </h1>
         <label>
           Назва виробу
@@ -187,7 +225,7 @@ const AddInventory = ({edit, itemToEdit}) => {
           onClick={handleSubmit}
           className="bg-red-950 text-white p-2 rounded-lg my-4 w-full"
         >
-          {edit? 'Редагувати':'Додати'}
+          {edit ? 'Редагувати' : 'Додати'}
         </button>
       </div>
     </div>

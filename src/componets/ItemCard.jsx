@@ -29,7 +29,7 @@ const ItemCard = ({ item }) => {
           {item.status}
         </div>
       </div>
-      <span className="text-xs text-gray-600 text-ellipsis px-2">
+      <span className="text-xs text-gray-600 line-clamp-1 px-2">
         Модель:{item.model}{" "}
         {item.serial !== "Невідомо" ? ` -> SN: ${item.serial}` : ""}
       </span>
@@ -57,7 +57,7 @@ const ItemCard = ({ item }) => {
           </span>
         ))}
         <div className="flex justify-around text-white my-2">
-          <Link to={`/edit/${item.name}`} className="statusInfo cursor-pointer px-2 rounded-lg">редагувати</Link>
+          <Link to={`/edit/${item.id}`} className="statusInfo cursor-pointer px-2 rounded-lg">редагувати</Link>
           <button className="statusDanger cursor-pointer px-2 rounded-lg">видалити</button>
         </div>
       </div>
