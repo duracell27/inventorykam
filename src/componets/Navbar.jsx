@@ -42,7 +42,7 @@ const Navbar = () => {
                 }
                 to={"/moves"}
               >
-                Переміщення
+                Зміни обладнання
               </NavLink>
             </li>
           </ul>

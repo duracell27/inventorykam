@@ -4,17 +4,50 @@ import AddInventory from "./pages/AddInventory";
 import Navbar from './componets/Navbar'
 import Moves from "./pages/Moves";
 import Edit from "./pages/Edit";
+import Move from "./pages/Move";
+import { Toaster } from 'react-hot-toast';
+import { createContext, useEffect, useState } from "react";
+import { axiosConfig } from "./utils/axiosConfig";
+import axios from "axios";
+
+export const SubDataContext = createContext()
 
 function App() {
+
+  const [categories, setCategories] = useState([]);
+  const [places, setPlaces] = useState([]);
+  const [subplaces, setSubplaces] = useState([]);
+  const [statuses, setStatuses] = useState([]);
+
+  const fetchSubdata = () => {
+    axios.all([axios.get('https://inventory.dev.web.kameya.if.ua/app/category', axiosConfig),
+    axios.get('https://inventory.dev.web.kameya.if.ua/app/place', axiosConfig),
+    axios.get('https://inventory.dev.web.kameya.if.ua/app/subplace', axiosConfig),
+    axios.get('https://inventory.dev.web.kameya.if.ua/app/status', axiosConfig)]).then(axios.spread((category, place, subplace, status) => {
+      setCategories(category.data)
+      setPlaces(place.data)
+      setSubplaces(subplace.data)
+      setStatuses(status.data)
+    }))
+  }
+
+  useEffect(() => {
+    fetchSubdata()
+  }, [])
+
   return (
     <BrowserRouter>
-    <Navbar/>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/addinventory" element={<AddInventory />} />
-        <Route path="/moves" element={<Moves />} />
-        <Route path="/edit/:id" element={<Edit />} />
-      </Routes>
+      <SubDataContext.Provider value={{categories,places,subplaces,statuses}}>
+        <Toaster />
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/addinventory" element={<AddInventory />} />
+          <Route path="/moves" element={<Moves />} />
+          <Route path="/edit/:id" element={<Edit />} />
+          <Route path="/move/:id" element={<Move />} />
+        </Routes>
+      </SubDataContext.Provider>
     </BrowserRouter>
   );
 }
