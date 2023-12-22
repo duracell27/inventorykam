@@ -29,6 +29,34 @@ const ItemCard = ({ item, fetchData }) => {
     }
 
   }
+if(item.date){
+
+  console.log( new Date())
+  console.log(item.date)
+  console.log(Date.parse(item.date))
+}
+
+// function додатиМісяці(вихіднаДата, кількістьМісяців) {
+//   // Перетворюємо рядок з датою у об'єкт Date
+//   let date = new Date(вихіднаДата);
+
+//   // Додаємо певну кількість місяців до дати
+//   date.setMonth(date.getMonth() + кількістьМісяців);
+
+//   // Рахуємо різницю між поточною датою та новою датою
+//   let різниця = date - new Date();
+
+//   // Переводимо мілісекунди у дні та повертаємо кількість днів
+//   return Math.floor(різниця / (1000 * 60 * 60 * 24));
+// }
+
+// // Вхідні дані
+// let вихіднаДата = "Wed, 15 Nov 2023 00:00:00 GMT";
+// let кількістьМісяців = 12;
+
+// // Виклик функції та виведення результату
+// let результат = додатиМісяці(вихіднаДата, кількістьМісяців);
+// console.log("Кількість днів до нової дати:", результат);
   return (
     <div
       className=" border border-red-950 rounded-xl cursor-pointer bg-yellow-100 w-[320px] shadow-md relative"
@@ -49,6 +77,14 @@ const ItemCard = ({ item, fetchData }) => {
         Модель:{item.model}
         {item.serial !== "Невідомо" ? ` -> SN: ${item.serial}` : ""}
       </span>
+      <div className="border-b-[1px] border-red-950"></div>
+
+
+            {/* {console.log(item.date ? new Date() - item.date:' нема дати')} */}
+            
+
+
+
       <div className="border-b-[1px] border-red-950"></div>
       <div className="px-2 items-center">
         <span className="px-2 my-1 inline-block bg-yellow-300 text-gray-800 rounded-lg">{item.place}</span>
