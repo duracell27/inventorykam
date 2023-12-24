@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import axios from "axios";
 import { axiosConfig } from "../utils/axiosConfig";
 
@@ -15,80 +15,110 @@ const colorsForStatus = {
 
 const ItemCard = ({ item, fetchData }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  
+
   const deleteHandler = (id) => {
     if (window.confirm("Точно видалити?")) {
-      axios.delete(`https://inventory.dev.web.kameya.if.ua/app/item/${id}`, axiosConfig).then((res) => {
-        if (res.status === 200) {
-          toast.success('Елемент успішно видалений')
-          fetchData()
-        }
-      }).catch((error) => {
-        toast.error('Не получилось видалити')
-      })
+      axios
+        .delete(
+          `https://inventory.dev.web.kameya.if.ua/app/item/${id}`,
+          axiosConfig
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            toast.success("Елемент успішно видалений");
+            fetchData();
+          }
+        })
+        .catch((error) => {
+          toast.error("Не получилось видалити");
+        });
     }
+  };
 
+  function getWarrantyTime(buyDate, amountOfmanth) {
+    if (!buyDate) {
+      return (
+        <span className="px-1 rounded-lg bg-yellow-200 text-sm">
+          не визначено
+        </span>
+      );
+    }
+    // Перетворюємо рядок з датою у об'єкт Date
+    let date = new Date(buyDate);
+
+    // Додаємо певну кількість місяців до дати
+    date.setMonth(date.getMonth() + +amountOfmanth);
+
+    // Рахуємо різницю між поточною датою та новою датою
+    let timeDelta = date - new Date();
+
+    // Переводимо мілісекунди у дні та повертаємо кількість днів
+    let rezultDays = Math.floor(timeDelta / (1000 * 60 * 60 * 24));
+    if (rezultDays >= 0) {
+      return (
+        <span className="px-1 rounded-lg bg-lime-500 text-white text-sm">
+          {rezultDays} дн
+        </span>
+      );
+    } else {
+      return (
+        <span className="px-1 rounded-lg bg-orange-400 text-white text-sm">
+          завершилась
+        </span>
+      );
+    }
   }
-if(item.date){
 
-  console.log( new Date())
-  console.log(item.date)
-  console.log(Date.parse(item.date))
-}
+  const showDate = (date) => {
+    const t = new Date(date);
+    return t.toLocaleDateString();
+  };
 
-// function додатиМісяці(вихіднаДата, кількістьМісяців) {
-//   // Перетворюємо рядок з датою у об'єкт Date
-//   let date = new Date(вихіднаДата);
+  // // Вхідні дані
+  // let вихіднаДата = "Wed, 15 Nov 2023 00:00:00 GMT";
+  // let кількістьМісяців = 12;
 
-//   // Додаємо певну кількість місяців до дати
-//   date.setMonth(date.getMonth() + кількістьМісяців);
+  // // Виклик функції та виведення результату
+  // let результат = додатиМісяці(вихіднаДата, кількістьМісяців);
+  // console.log("Кількість днів до нової дати:", результат);
 
-//   // Рахуємо різницю між поточною датою та новою датою
-//   let різниця = date - new Date();
+  // let warrantyDays = "Завершилась"
 
-//   // Переводимо мілісекунди у дні та повертаємо кількість днів
-//   return Math.floor(різниця / (1000 * 60 * 60 * 24));
-// }
-
-// // Вхідні дані
-// let вихіднаДата = "Wed, 15 Nov 2023 00:00:00 GMT";
-// let кількістьМісяців = 12;
-
-// // Виклик функції та виведення результату
-// let результат = додатиМісяці(вихіднаДата, кількістьМісяців);
-// console.log("Кількість днів до нової дати:", результат);
   return (
     <div
       className=" border border-red-950 rounded-xl cursor-pointer bg-yellow-100 w-[320px] shadow-md relative"
       onClick={() => setModalVisible(!modalVisible)}
     >
-      <div className="flex justify-between w-full items-center p-2">
+      <div className="flex justify-between w-full items-center p-2 pb-1">
         <div>
-          <p className="text-md whitespace-nowrap text-red-950 leading-4"><strong>{item.name}</strong> </p>
+          <p className="text-md whitespace-nowrap text-red-950 leading-4">
+            <strong>{item.name}</strong>
+          </p>
         </div>
         <div
-          className={`text-center px-2 text-white ${colorsForStatus[item.status]
-            } rounded-xl line-clamp-1`}
+          className={`text-center px-2 text-white ${
+            colorsForStatus[item.status]
+          } rounded-xl line-clamp-1`}
         >
           {item.status}
         </div>
       </div>
-      <span className="text-xs text-gray-600 line-clamp-1 px-2">
+      <span className="text-xs text-gray-600 line-clamp-1 px-2 pb-2">
         Модель:{item.model}
         {item.serial !== "Невідомо" ? ` -> SN: ${item.serial}` : ""}
       </span>
       <div className="border-b-[1px] border-red-950"></div>
 
-
-            {/* {console.log(item.date ? new Date() - item.date:' нема дати')} */}
-            
-
-
+      <div className="px-2">
+        Гарантія {getWarrantyTime(item.date, item.warranty)}
+      </div>
 
       <div className="border-b-[1px] border-red-950"></div>
       <div className="px-2 items-center">
-        <span className="px-2 my-1 inline-block bg-yellow-300 text-gray-800 rounded-lg">{item.place}</span>
-        {item.subplace? ' -> ': ''}
+        <span className="px-2 my-1 inline-block bg-yellow-300 text-gray-800 rounded-lg">
+          {item.place}
+        </span>
+        {item.subplace ? " -> " : ""}
         {item.subplace ? (
           <span className="text-xs px-2 my-1 inline-block bg-yellow-200 text-gray-800 rounded-lg">{`${item.subplace}`}</span>
         ) : (
@@ -97,22 +127,64 @@ if(item.date){
       </div>
       {/* далі модалка */}
       <div
-        className={`${modalVisible ? "block" : "hidden"
-          } border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100`}
+        className={`${
+          modalVisible ? "block" : "hidden"
+        } border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100`}
       >
         <div className="text-center">
           <strong>Загальна інформація</strong>
         </div>
-        {Object.keys(item).map((itemKey) => (
+
+        <div className="">
+          <span className="text-xs block py-1 ">
+            <strong>Назва</strong> : {item.name}
+          </span>
+          <span className="text-xs block py-1 ">
+            <strong>Фірма</strong> : {item.firm}
+          </span>
+          <span className="text-xs block py-1 ">
+            <strong>Модель</strong> : {item.model}
+          </span>
+          <span className="text-xs block py-1 ">
+            <strong>Серійник</strong> : {item.serial}
+          </span>
+          <div className="border-b-[1px] border-red-950"></div>
+          <span className="text-xs block py-1 ">
+            <strong>Дата покупки</strong> : {showDate(item.date)}р.
+          </span>
+          <span className="text-xs block py-1 ">
+            <strong>Термін гарантії</strong> : {item.warranty} міс.
+          </span>
+        </div>
+        {/* {Object.keys(item).map((itemKey) => (
           <span key={itemKey} className="text-xs block py-1 ">
-            {" "}
+            
             <strong>{itemKey}</strong> : {item[itemKey]}
           </span>
-        ))}
-        <div className="flex justify-around text-white my-2">
-          <Link to={`/edit/${item.id}`} className="statusInfo cursor-pointer px-2 rounded-lg">редагувати</Link>
-          <Link to={`/move/${item.id}`} className="statusInfo cursor-pointer px-2 rounded-lg">переміщення</Link>
-          <button onClick={() => deleteHandler(item.id)} className="statusDanger cursor-pointer px-2 rounded-lg">видалити</button>
+        ))} */}
+        <div className="flex">
+          <Link
+            to={`/move/${item.id}`}
+            className="statusInfo cursor-pointer px-2 rounded-lg w-full text-white text-center"
+          >
+            переміcтити / змінити статус
+          </Link>
+        </div>
+
+        <div className="flex gap-2 text-white my-2">
+          <Link
+            to={`/edit/${item.id}`}
+            className="statusInfo cursor-pointer px-2 rounded-lg text-center w-1/2"
+          >
+            редагувати
+          </Link>
+
+          <button
+            onClick={() => deleteHandler(item.id)}
+            className="statusDanger cursor-pointer px-2 rounded-lg text-center w-1/2"
+          >
+            видалити
+          </button>
         </div>
       </div>
     </div>

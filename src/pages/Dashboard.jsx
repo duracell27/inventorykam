@@ -5,7 +5,19 @@ import { axiosConfig } from "../utils/axiosConfig";
 import { SubDataContext } from "../App";
 
 const Dashboard = () => {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState([{
+    timeStamp: "12/14/2023 14:46",
+    firm: "3d optical mouse",
+    model: "mouse",
+    serial: "24884703",
+    status: "Працює",
+    place: "Шашкевича",
+    subplace: "Кладова",
+    category: "Відеонагляд",
+    name: "Мишка до відеонагляду",
+    warranty: '12',
+    date: '"Wed, 15 Nov 2023 00:00:00 GMT"'
+  }]);
   const [selectedShop, setSelectedShop] = useState("Всі");
   const [selectedCategory, setSelectedCategory] = useState("Виберіть");
   const [itemsToFetch, setItemsToFetch] = useState(20)
@@ -48,7 +60,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="bg-yellow-50">
+      <div className="bg-yellow-50 h-screen">
     <div className="border-b-2 border-red-950 pb-4"></div>
         <div className="flex justify-center">
           {/* секція для техніки в ремонті */}
@@ -143,17 +155,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-// .filter((item) => {
-//   if (selectedShop === "Всі") {
-//     return item;
-//   } else {
-//     return item.place === selectedShop;
-//   }
-// }).filter((item) => {
-//   if (selectedCategory === "Виберіть") {
-//     return item;
-//   } else {
-//     return item.category === selectedCategory;
-//   }
-// })
