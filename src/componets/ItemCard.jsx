@@ -70,6 +70,7 @@ const ItemCard = ({ item, fetchData }) => {
   }
 
   const showDate = (date) => {
+    if(!date) return "не вказано"
     const t = new Date(date);
     return t.toLocaleDateString();
   };
@@ -103,7 +104,7 @@ const ItemCard = ({ item, fetchData }) => {
           {item.status}
         </div>
       </div>
-      <span className="text-xs text-gray-600 line-clamp-1 px-2 pb-2">
+      <span className="text-xs text-gray-600 line-clamp-1 overflow-hidden px-2 mb-2">
         Модель:{item.model}
         {item.serial !== "Невідомо" ? ` -> SN: ${item.serial}` : ""}
       </span>
@@ -150,10 +151,10 @@ const ItemCard = ({ item, fetchData }) => {
           </span>
           <div className="border-b-[1px] border-red-950"></div>
           <span className="text-xs block py-1 ">
-            <strong>Дата покупки</strong> : {showDate(item.date)}р.
+            <strong>Дата покупки</strong> : {showDate(item.date)}
           </span>
           <span className="text-xs block py-1 ">
-            <strong>Термін гарантії</strong> : {item.warranty} міс.
+            <strong>Термін гарантії</strong> : {item.warranty === null? "-": item.warranty} міс.
           </span>
         </div>
         {/* {Object.keys(item).map((itemKey) => (
