@@ -1,30 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MoveCard from "../componets/MoveCard";
+import axios from "axios";
+import { axiosConfig } from "../utils/axiosConfig";
 
 const Moves = () => {
   const [itemsToFetch, setItemsToFetch] = useState(20)
   const [items, setItems] = useState([
-    {
-      id: 1,
-      name: "Касовий принтер",
-      place: "Арсен",
-      changes: [
-        {
-          changeType: "place",
-          from: "Шашкевича",
-          to: "Арсен",
-          timestamp: "Wed, 15 Nov 2023 12:34:50 GMT",
-        },
-        {
-          changeType: "status",
-          from: "В ремонті",
-          to: "Працює",
-          timestamp: "Wed, 13 Nov 2023 15:30:40 GMT",
-        },
-      ],
-    },
+    // {
+    //   id: 1,
+    //   name: "Касовий принтер",
+    //   place: "Арсен",
+    //   changes: [
+    //     {
+    //       changeType: "place",
+    //       from: "Шашкевича",
+    //       to: "Арсен",
+    //       timestamp: "Wed, 15 Nov 2023 12:34:50 GMT",
+    //     },
+    //     {
+    //       changeType: "status",
+    //       from: "В ремонті",
+    //       to: "Працює",
+    //       timestamp: "Wed, 13 Nov 2023 15:30:40 GMT",
+    //     },
+    //   ],
+    // },
     
   ]);
+  useEffect(()=>{
+
+    axios.get('https://inventory.dev.web.kameya.if.ua/app/item?order=lastChange&reverse&filter=hasChange=true', axiosConfig).then((res)=>{
+
+      if (res.status === 200) {
+        setItems(res.data)
+      }
+    })
+    // app/item?order=lastChange&reverse&filter=hasChange=true
+  },[])
   const handleItemsToFetch = () => {
     setItemsToFetch(itemsToFetch + 20)
   }
@@ -34,8 +46,8 @@ const Moves = () => {
         Історія змін обладнання
       </h1>
       <div className="flex justify-center flex-wrap gap-5">
-        {items.length &&
-          items.map((item, idx) => <MoveCard key={item.id} item={item} />)}
+        {
+          items?.map((item, idx) => <MoveCard key={item.id} item={item} />)}
       </div>
       <div className="flex w-full justify-center my-10">
         <button

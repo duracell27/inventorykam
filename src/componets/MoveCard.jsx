@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ArrowRight from "../componets/icons/ArrowRight";
+import axios from "axios";
+import { axiosConfig } from "../utils/axiosConfig";
 
 const colorsForChangeType = {
   status: "bg-sky-300",
@@ -9,11 +11,21 @@ const colorsForChangeType = {
 
 const MoveCard = ({ item }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [changes, setChanges] = useState([]);
 
   const showDateTime = (date) => {
     const t = new Date(date);
     return t.toLocaleString();
   };
+
+  useEffect(()=>{
+    axios.get(`https://inventory.dev.web.kameya.if.ua/app/change?order=timestamp&reverse&filter=item=${item.id}`, axiosConfig).then((res)=>{
+      console.log(res)
+      if (res.status === 200) {
+        setChanges(res.data)
+      }
+    })
+  },[])
 
   return (
     <div
@@ -21,7 +33,7 @@ const MoveCard = ({ item }) => {
       onClick={() => setModalVisible(!modalVisible)}
     >
       <div>
-        <p className="text-md whitespace-nowrap text-red-950 leading-4 px-2 pt-2">
+        <p className="text-md whitespace-nowrap text-red-950 leading-4 px-2 py-2">
           <strong>{item.name}</strong>
         </p>
       </div>
@@ -31,7 +43,8 @@ const MoveCard = ({ item }) => {
         </span>
 
         <p className="text-sm px-2">
-          {showDateTime(item.changes[0].timestamp)}
+          {/* {showDateTime(item.changes[0].timestamp)} */}
+          {showDateTime(item.lastChange)}
         </p>
       </div>
 
@@ -40,7 +53,7 @@ const MoveCard = ({ item }) => {
           modalVisible ? "block" : "hidden"
         } border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100`}
       >
-        {item.changes.map((change, indx) => (
+        {changes?.map((change, indx) => (
           <div className="border border-red-950 p-2 my-1 rounded-lg">
             <div className="flex items-center">
               <div className="w-2/5 text-center line-clamp-1">
@@ -48,9 +61,9 @@ const MoveCard = ({ item }) => {
               </div>
               <div className="w-1/5 text-center flex flex-col">
                 <span
-                  className={`${colorsForChangeType[change.changeType]} px-1 rounded-lg`}
+                  className={`${colorsForChangeType[change.type]} px-1 rounded-lg`}
                 >
-                  {change.changeType}
+                  {change.type}
                 </span>
                 <span className="flex justify-center">
                   <ArrowRight />
