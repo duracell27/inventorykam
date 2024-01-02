@@ -38,6 +38,7 @@ const Dashboard = () => {
         setItems(res.data)
       }
     })
+    fetchItemsWithProblem()
   }
 
   useEffect(() => {
