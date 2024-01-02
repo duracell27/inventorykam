@@ -6,25 +6,6 @@ import { axiosConfig } from "../utils/axiosConfig";
 const Moves = () => {
   const [itemsToFetch, setItemsToFetch] = useState(20)
   const [items, setItems] = useState([
-    // {
-    //   id: 1,
-    //   name: "Касовий принтер",
-    //   place: "Арсен",
-    //   changes: [
-    //     {
-    //       changeType: "place",
-    //       from: "Шашкевича",
-    //       to: "Арсен",
-    //       timestamp: "Wed, 15 Nov 2023 12:34:50 GMT",
-    //     },
-    //     {
-    //       changeType: "status",
-    //       from: "В ремонті",
-    //       to: "Працює",
-    //       timestamp: "Wed, 13 Nov 2023 15:30:40 GMT",
-    //     },
-    //   ],
-    // },
     
   ]);
   useEffect(()=>{
@@ -35,7 +16,6 @@ const Moves = () => {
         setItems(res.data)
       }
     })
-    // app/item?order=lastChange&reverse&filter=hasChange=true
   },[])
   const handleItemsToFetch = () => {
     setItemsToFetch(itemsToFetch + 20)

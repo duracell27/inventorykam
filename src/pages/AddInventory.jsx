@@ -75,12 +75,13 @@ const AddInventory = ({ edit, move, id }) => {
       category,
       timestamp: new Date()
     };
-    if (name.length < 3 || firm.length < 3 || model.length < 3 || serial.length < 3 || status === 'Виберіть' || place === "Виберіть" || category === "Виберіть") {
-      toast.error('Заповніть всі обов\'язкові поля')
-      return
-    }
+    
 
     if (edit && id) {
+      if (name.length < 3 || firm.length < 3 || model.length < 3 || serial.length < 3 || category === "Виберіть") {
+        toast.error('Заповніть всі обов\'язкові поля')
+        return
+      }
       axios.put(`https://inventory.dev.web.kameya.if.ua/app/item/${id}`, answers, axiosConfig).then((res) => {
         if (res.status === 200) {
           toast('Елемент успішно відредаговано')
@@ -90,6 +91,10 @@ const AddInventory = ({ edit, move, id }) => {
         }
       }).catch((error) => toast(error))
     } else if (move && id) {
+      if (status === 'Виберіть' || place === "Виберіть") {
+        toast.error('Заповніть всі обов\'язкові поля')
+        return
+      }
       answers = { ...answers, hasChange: true, lastChange: new Date() }
       axios.put(`https://inventory.dev.web.kameya.if.ua/app/item/${id}`, answers, axiosConfig).then((res) => {
         if (res.status === 200) {
@@ -119,6 +124,10 @@ const AddInventory = ({ edit, move, id }) => {
         }
       }).catch((error) => toast(error))
     } else {
+      if (name.length < 3 || firm.length < 3 || model.length < 3 || serial.length < 3 || status === 'Виберіть' || place === "Виберіть" || category === "Виберіть") {
+        toast.error('Заповніть всі обов\'язкові поля')
+        return
+      }
       answers = {...answers, hasChange: false, lastChange: null}
       axios.post(`https://inventory.dev.web.kameya.if.ua/app/item`, answers, axiosConfig).then((res) => {
 
@@ -144,7 +153,7 @@ const AddInventory = ({ edit, move, id }) => {
   };
 
   return (
-    <div className="flex flex-col w-full items-center bg-yellow-50">
+    <div className="flex flex-col w-full h-screen items-center bg-yellow-50">
       <div className="formWrapper max-w-xs">
         <h1 className="text-2xl text-center p-2 text-red-950">
           <strong>{edit ? "Редагувати " : move ? "Перемістити" : "Додати "} Інвентар</strong>

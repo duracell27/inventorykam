@@ -150,7 +150,7 @@ const Dashboard = () => {
         </div>
 
 
-        <section className="dashboard p-4">
+        <section className="dashboard bg-yellow-50 p-4">
           <p className="text-red-950 text-lg text-center py-3">
             Техніка з магазину: <strong>{selectedShop}</strong>
           </p>
