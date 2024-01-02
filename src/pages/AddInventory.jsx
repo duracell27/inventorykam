@@ -33,10 +33,14 @@ const AddInventory = ({ edit, move, id }) => {
   const [subplace, setSubplace] = useState("Виберіть");
   const [category, setCategory] = useState("Виберіть");
 
+  const [oldStatus, setOldStatus] = useState("Виберіть");
+  const [oldPlace, setOldPlace] = useState("Виберіть");
+  const [oldSubplace, setOldSubplace] = useState("Виберіть");
+
   useEffect(() => {
     if ((edit || move) && id) {
       axios.get(`https://inventory.dev.web.kameya.if.ua/app/item/${id}`, axiosConfig).then((res) => {
-        console.log(res.data)
+
         if (res.status === 200) {
           setName(res.data.name)
           setFirm(res.data.firm)
@@ -48,13 +52,17 @@ const AddInventory = ({ edit, move, id }) => {
           setPlace(res.data.place)
           setSubplace(res.data.subplace)
           setCategory(res.data.category)
+
+          setOldStatus(res.data.status)
+          setOldPlace(res.data.place)
+          setOldSubplace(res.data.subplace)
         }
       })
     }
   }, [edit, id])
 
   const handleSubmit = () => {
-    const answers = {
+    let answers = {
       name,
       firm,
       model,
@@ -67,6 +75,11 @@ const AddInventory = ({ edit, move, id }) => {
       category,
       timestamp: new Date()
     };
+    if (name.length < 3 || firm.length < 3 || model.length < 3 || serial.length < 3 || status !== 'Виберіть' || place !== "Виберіть" || category !== "Виберіть") {
+      toast.error('Заповніть всі обов\'язкові поля')
+      return
+    }
+
     if (edit && id) {
       axios.put(`https://inventory.dev.web.kameya.if.ua/app/item/${id}`, answers, axiosConfig).then((res) => {
         if (res.status === 200) {
@@ -77,10 +90,30 @@ const AddInventory = ({ edit, move, id }) => {
         }
       }).catch((error) => toast(error))
     } else if (move && id) {
+      answers = { ...answers, hasChange: true, lastChange: new Date() }
       axios.put(`https://inventory.dev.web.kameya.if.ua/app/item/${id}`, answers, axiosConfig).then((res) => {
         if (res.status === 200) {
-          toast('Елемент успішно переміщено')
-          navigate('/')
+          let moveAnswers = {
+            item: id,
+            timestamp: new Date(),
+          }
+          if (oldStatus !== status) {
+            moveAnswers = { ...moveAnswers, from: oldStatus, to: status, type: 'status' }
+          } else if (oldPlace !== place) {
+            moveAnswers = { ...moveAnswers, from: oldPlace, to: place, type: 'place' }
+          } else if (oldSubplace !== subplace) {
+            moveAnswers = { ...moveAnswers, from: oldSubplace, to: subplace, type: 'subplace' }
+          }
+
+          axios.post('https://inventory.dev.web.kameya.if.ua/app/change', moveAnswers, axiosConfig).then((res) => {
+            console.log(res)
+            if (res.status === 200) {
+              toast('Елемент успішно переміщено')
+              navigate('/')
+            }
+
+          })
+
         } else {
           toast('Сумно, нічого не получилось з того')
         }
@@ -117,7 +150,7 @@ const AddInventory = ({ edit, move, id }) => {
         </h1>
         {!move ? (<>
           <label>
-            Назва виробу
+            Назва виробу *
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -127,7 +160,7 @@ const AddInventory = ({ edit, move, id }) => {
             />
           </label>
           <label>
-            Фірма виробу
+            Фірма виробу *
             <input
               value={firm}
               onChange={(e) => setFirm(e.target.value)}
@@ -137,7 +170,7 @@ const AddInventory = ({ edit, move, id }) => {
             />
           </label>
           <label>
-            Модель виробу
+            Модель виробу *
             <input
               value={model}
               onChange={(e) => setModel(e.target.value)}
@@ -147,7 +180,7 @@ const AddInventory = ({ edit, move, id }) => {
             />
           </label>
           <label>
-            Серійник виробу
+            Серійник виробу *
             <input
               value={serial}
               onChange={(e) => setSerial(e.target.value)}
@@ -176,7 +209,7 @@ const AddInventory = ({ edit, move, id }) => {
               className="w-full p-2 border border-red-950 rounded-lg my-1"
             />
           </label><label>
-            Категорія
+            Категорія *
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
@@ -191,7 +224,7 @@ const AddInventory = ({ edit, move, id }) => {
           </label></>) : null}
 
         {!edit ? (<><label>
-          Статус
+          Статус *
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
@@ -205,7 +238,7 @@ const AddInventory = ({ edit, move, id }) => {
           </select>
         </label>
           <label>
-            Розміщення
+            Розміщення *
             <select
               value={place}
               onChange={(e) => setPlace(e.target.value)}

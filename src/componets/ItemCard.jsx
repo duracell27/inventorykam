@@ -13,7 +13,7 @@ const colorsForStatus = {
   "Під ремонт": "bg-amber-400",
 };
 
-const ItemCard = ({ item, fetchData }) => {
+const ItemCard = ({ item, fetchData, itemsToFetch }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const deleteHandler = (id) => {
@@ -26,7 +26,7 @@ const ItemCard = ({ item, fetchData }) => {
         .then((res) => {
           if (res.status === 200) {
             toast.success("Елемент успішно видалений");
-            fetchData();
+            fetchData(itemsToFetch);
           }
         })
         .catch((error) => {
@@ -75,15 +75,6 @@ const ItemCard = ({ item, fetchData }) => {
     return t.toLocaleDateString();
   };
 
-  // // Вхідні дані
-  // let вихіднаДата = "Wed, 15 Nov 2023 00:00:00 GMT";
-  // let кількістьМісяців = 12;
-
-  // // Виклик функції та виведення результату
-  // let результат = додатиМісяці(вихіднаДата, кількістьМісяців);
-  // console.log("Кількість днів до нової дати:", результат);
-
-  // let warrantyDays = "Завершилась"
 
   return (
     <div

@@ -63,6 +63,7 @@ const Dashboard = () => {
                   <ItemCard fetchData={fetchData}
                     key={item.id}
                     item={item}
+                    itemsToFetch={itemsToFetch}
                     statusColor={"statusVarning"}
                   />
                 ))}
@@ -80,6 +81,7 @@ const Dashboard = () => {
                 broken.map((item) => (
                   <ItemCard
                     fetchData={fetchData}
+                    itemsToFetch={itemsToFetch}
                     key={item.id}
                     item={item}
                     statusColor={"statusDanger"}
@@ -131,7 +133,7 @@ const Dashboard = () => {
           </p>
           <div className="inrepairWrapper flex gap-5 flex-wrap justify-center">
             {items.length &&
-              items.map((item, idx) => <ItemCard fetchData={fetchData} key={item.id} item={item} />)}
+              items.map((item, idx) => <ItemCard itemsToFetch={itemsToFetch} fetchData={fetchData} key={item.id} item={item} />)}
           </div>
           <div className="flex w-full justify-center my-10">
             <button onClick={handleItemsToFetch} disabled={items.length % 20 > 0} className="p-2 bg-red-950 rounded-lg text-white disabled:bg-slate-500 ">Загрузити ще</button>
