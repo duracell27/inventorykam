@@ -11,6 +11,7 @@ const colorsForStatus = {
   "Не використовується": "bg-blue-700",
   "Під списання": "bg-slate-800",
   "Під ремонт": "bg-amber-400",
+  "Під оновлення": "bg-indigo-400",
 };
 
 const ItemCard = ({ item, fetchData, itemsToFetch }) => {

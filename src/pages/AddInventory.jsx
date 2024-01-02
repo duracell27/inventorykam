@@ -75,7 +75,7 @@ const AddInventory = ({ edit, move, id }) => {
       category,
       timestamp: new Date()
     };
-    if (name.length < 3 || firm.length < 3 || model.length < 3 || serial.length < 3 || status !== 'Виберіть' || place !== "Виберіть" || category !== "Виберіть") {
+    if (name.length < 3 || firm.length < 3 || model.length < 3 || serial.length < 3 || status === 'Виберіть' || place === "Виберіть" || category === "Виберіть") {
       toast.error('Заповніть всі обов\'язкові поля')
       return
     }
@@ -119,6 +119,7 @@ const AddInventory = ({ edit, move, id }) => {
         }
       }).catch((error) => toast(error))
     } else {
+      answers = {...answers, hasChange: false, lastChange: null}
       axios.post(`https://inventory.dev.web.kameya.if.ua/app/item`, answers, axiosConfig).then((res) => {
 
         if (res.status === 200) {

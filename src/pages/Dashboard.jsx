@@ -12,16 +12,19 @@ const Dashboard = () => {
   const [dsblbtn, setDsblbtn] = useState(false)
   const [inRepair, setInRepair] = useState([])
   const [broken, setBroken] = useState([])
+  const [reNew, setReNew] = useState([])
 
   const { places, categories } = useContext(SubDataContext)
 
   const fetchItemsWithProblem = () => {
     axios.all([
       axios.get('https://inventory.dev.web.kameya.if.ua/app/item?count=20&order=place&filter=status=В ремонті', axiosConfig),
-      axios.get('https://inventory.dev.web.kameya.if.ua/app/item?count=20&order=place&filter=status=Зламаний', axiosConfig)
-    ]).then(axios.spread((inRepair, broken) => {
+      axios.get('https://inventory.dev.web.kameya.if.ua/app/item?count=20&order=place&filter=status=Зламаний', axiosConfig),
+      axios.get('https://inventory.dev.web.kameya.if.ua/app/item?count=20&order=place&filter=status=Під оновлення', axiosConfig),
+    ]).then(axios.spread((inRepair, broken, reNew) => {
       setInRepair(inRepair.data)
       setBroken(broken.data)
+      setReNew(reNew.data)
     }))
   }
 
@@ -79,6 +82,26 @@ const Dashboard = () => {
               {!broken.length && ('Немає зламаної техніки')}
               {broken.length > 0 &&
                 broken.map((item) => (
+                  <ItemCard
+                    fetchData={fetchData}
+                    itemsToFetch={itemsToFetch}
+                    key={item.id}
+                    item={item}
+                    statusColor={"statusDanger"}
+                  />
+                ))}
+            </div>
+          </section>
+          {/* секція для під оновлення техніка */}
+          <section className="dashboard p-4 ">
+            <p className="text-red-950 text-lg">
+              {" "}
+              <strong>Під оновлення:</strong>
+            </p>
+            <div className="inrepairWrapper flex gap-3 flex-wrap items-start">
+              {!reNew.length && ('Немає техніки під оновлення')}
+              {reNew.length > 0 &&
+                reNew.map((item) => (
                   <ItemCard
                     fetchData={fetchData}
                     itemsToFetch={itemsToFetch}
