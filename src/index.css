@@ -35,7 +35,7 @@ code {
 }
 
 .navLink {
-  @apply text-lg text-red-950 rounded-full cursor-pointer text-center bg-yellow-50;
+  @apply text-lg text-red-950 rounded-full cursor-pointer text-center bg-yellow-200 px-2;
 }
 
 .statusSuccess {

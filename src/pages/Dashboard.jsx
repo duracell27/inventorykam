@@ -53,10 +53,10 @@ const Dashboard = () => {
   return (
     <>
       <div className="bg-yellow-50 h-screen">
-    <div className="border-b-2 border-red-950 pb-4"></div>
-        <div className="flex justify-center">
+        <div className="border-b-2 border-red-950 pb-4"></div>
+        <div className="flex justify-center flex-wrap">
           {/* секція для техніки в ремонті */}
-          <section className="dashboard p-4 ">
+          <section className="dashboard p-4 w-[320px]">
             <p className="text-red-950 text-lg">
               <strong>Техніка в ремонті:</strong>{" "}
             </p>
@@ -74,7 +74,7 @@ const Dashboard = () => {
             </div>
           </section>
           {/* секція для Поламана техніка */}
-          <section className="dashboard p-4 ">
+          <section className="dashboard p-4 w-[320px]">
             <p className="text-red-950 text-lg">
               {" "}
               <strong>Поламана техніка:</strong>
@@ -94,7 +94,7 @@ const Dashboard = () => {
             </div>
           </section>
           {/* секція для під оновлення техніка */}
-          <section className="dashboard p-4 ">
+          <section className="dashboard p-4 w-[320px]">
             <p className="text-red-950 text-lg">
               {" "}
               <strong>Під оновлення:</strong>
@@ -121,31 +121,37 @@ const Dashboard = () => {
 
         {/* вибір магазину в селекті для фільтрації */}
         <div className="flex justify-center mt-6">
-          <div className="">
-            <span className="mx-4">Виберіть магазин:</span>
-            <select
-              className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950"
-              value={selectedShop}
-              onChange={(e) => setSelectedShop(e.target.value)}
-            >
-              <option value="Всі">Всі</option>
-              {places.length && places.map((place) => (
-                <option key={place.id} value={place.name}>{place.name}</option>
-              ))}
+          <div className="flex flex-col md:flex-row">
+            <div className="my-2">
+              <span className="mx-4 mb-1 text-red-950"><strong>Виберіть магазин:</strong></span>
+              <select
+                className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
+                value={selectedShop}
+                onChange={(e) => setSelectedShop(e.target.value)}
+              >
+                <option value="Всі">Всі</option>
+                {places.length && places.map((place) => (
+                  <option key={place.id} value={place.name}>{place.name}</option>
+                ))}
 
-            </select>
-            <span className="mx-4">Виберіть категорію:</span>
-            <select
-              className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              <option value="Виберіть">Виберіть</option>
-              {categories.length && categories.map((category) => (
-                <option key={category.id} value={category.name}>{category.name}</option>
-              ))}
+              </select>
+            </div>
+            <div className="my-2">
+              <span className="mx-4 mb-1 text-red-950"><strong>Виберіть категорію:</strong></span>
+              <select
+                className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <option value="Виберіть">Виберіть</option>
+                {categories.length && categories.map((category) => (
+                  <option key={category.id} value={category.name}>{category.name}</option>
+                ))}
 
-            </select>
+              </select>
+            </div>
+
+
           </div>
 
         </div>
