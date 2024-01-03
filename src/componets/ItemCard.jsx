@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { axiosConfig } from "../utils/axiosConfig";
+import { axiosConfig, baseURL } from "../utils/axiosConfig";
+import CloseIcon from "./icons/CloseIcon";
 
 const colorsForStatus = {
   Працює: "bg-green-600",
@@ -21,7 +22,7 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
     if (window.confirm("Точно видалити?")) {
       axios
         .delete(
-          `https://inventory.dev.web.kameya.if.ua/app/item/${id}`,
+          `${baseURL}app/item/${id}`,
           axiosConfig
         )
         .then((res) => {
@@ -71,7 +72,7 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
   }
 
   const showDate = (date) => {
-    if(!date) return "не вказано"
+    if (!date) return "не вказано"
     const t = new Date(date);
     return t.toLocaleDateString();
   };
@@ -80,24 +81,23 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
   return (
     <div
       className=" border border-red-950 rounded-xl cursor-pointer bg-yellow-100 w-[320px] shadow-md relative"
-      onClick={() => setModalVisible(!modalVisible)}
+      onClick={() => setModalVisible(true)}
     >
       <div className="flex justify-between w-full items-center p-2 pb-1">
         <div>
-          <p className="text-md whitespace-nowrap text-red-950 leading-4">
+          <p className="text-md text-red-950 leading-4">
             <strong>{item.name}</strong>
           </p>
         </div>
         <div
-          className={`text-center px-2 text-white ${
-            colorsForStatus[item.status]
-          } rounded-xl line-clamp-1`}
+          className={`text-center px-2 text-white ${colorsForStatus[item.status]
+            } rounded-xl line-clamp-1`}
         >
           {item.status}
         </div>
       </div>
       <span className="text-xs text-gray-600 line-clamp-1 overflow-hidden px-2 mb-2">
-        Модель:{item.model}
+        Модель: {item.model}
         {item.serial !== "Невідомо" ? ` -> SN: ${item.serial}` : ""}
       </span>
       <div className="border-b-[1px] border-red-950"></div>
@@ -120,12 +120,18 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
       </div>
       {/* далі модалка */}
       <div
-        className={`${
-          modalVisible ? "block" : "hidden"
-        } border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100`}
+        className={`${modalVisible ? "block" : "hidden"
+          } border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100`}
       >
         <div className="text-center">
           <strong>Загальна інформація</strong>
+        </div>
+        <div onClick={(e)=>{
+          e.stopPropagation()
+          setModalVisible(false)
+        }} className="absolute right-1 top-1 bg-yellow-300 p-1 rounded-full">
+
+          <CloseIcon />
         </div>
 
         <div className="">
@@ -146,7 +152,7 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
             <strong>Дата покупки</strong> : {showDate(item.date)}
           </span>
           <span className="text-xs block py-1 ">
-            <strong>Термін гарантії</strong> : {item.warranty === null? "-": item.warranty} міс.
+            <strong>Термін гарантії</strong> : {item.warranty === null ? "не вказано" : `${item.warranty} міс.`}
           </span>
         </div>
         {/* {Object.keys(item).map((itemKey) => (

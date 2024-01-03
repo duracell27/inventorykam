@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MoveCard from "../componets/MoveCard";
 import axios from "axios";
-import { axiosConfig } from "../utils/axiosConfig";
+import { axiosConfig, baseURL } from "../utils/axiosConfig";
 
 const Moves = () => {
   const [itemsToFetch, setItemsToFetch] = useState(20)
@@ -10,7 +10,7 @@ const Moves = () => {
   ]);
   useEffect(()=>{
 
-    axios.get('https://inventory.dev.web.kameya.if.ua/app/item?order=lastChange&reverse&filter=hasChange=true', axiosConfig).then((res)=>{
+    axios.get(`${baseURL}app/item?order=lastChange&reverse&filter=hasChange=true`, axiosConfig).then((res)=>{
 
       if (res.status === 200) {
         setItems(res.data)
@@ -21,7 +21,7 @@ const Moves = () => {
     setItemsToFetch(itemsToFetch + 20)
   }
   return (
-    <div className="h-screen bg-yellow-50">
+    <div className=" bg-yellow-50">
       <h1 className="text-2xl text-center color-red-950 py-10">
         Історія змін обладнання
       </h1>

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
-import { axiosConfig } from "../utils/axiosConfig";
+import { axiosConfig, baseURL } from "../utils/axiosConfig";
 import { SubDataContext } from "../App";
 
 const getFormattedDate = () => {
@@ -26,7 +26,7 @@ const AddInventory = ({ edit, move, id }) => {
   const [firm, setFirm] = useState("");
   const [model, setModel] = useState("");
   const [serial, setSerial] = useState("");
-  const [date, setDate] = useState(getFormattedDate());
+  const [date, setDate] = useState("");
   const [warranty, setWarranty] = useState("");
   const [status, setStatus] = useState("Виберіть");
   const [place, setPlace] = useState("Виберіть");
@@ -39,7 +39,7 @@ const AddInventory = ({ edit, move, id }) => {
 
   useEffect(() => {
     if ((edit || move) && id) {
-      axios.get(`https://inventory.dev.web.kameya.if.ua/app/item/${id}`, axiosConfig).then((res) => {
+      axios.get(`${baseURL}app/item/${id}`, axiosConfig).then((res) => {
 
         if (res.status === 200) {
           setName(res.data.name)
@@ -82,7 +82,7 @@ const AddInventory = ({ edit, move, id }) => {
         toast.error('Заповніть всі обов\'язкові поля')
         return
       }
-      axios.put(`https://inventory.dev.web.kameya.if.ua/app/item/${id}`, answers, axiosConfig).then((res) => {
+      axios.put(`${baseURL}app/item/${id}`, answers, axiosConfig).then((res) => {
         if (res.status === 200) {
           toast('Елемент успішно відредаговано')
           navigate('/')
@@ -96,7 +96,7 @@ const AddInventory = ({ edit, move, id }) => {
         return
       }
       answers = { ...answers, hasChange: true, lastChange: new Date() }
-      axios.put(`https://inventory.dev.web.kameya.if.ua/app/item/${id}`, answers, axiosConfig).then((res) => {
+      axios.put(`${baseURL}app/item/${id}`, answers, axiosConfig).then((res) => {
         if (res.status === 200) {
           let moveAnswers = {
             item: id,
@@ -110,7 +110,7 @@ const AddInventory = ({ edit, move, id }) => {
             moveAnswers = { ...moveAnswers, from: oldSubplace, to: subplace, type: 'subplace' }
           }
 
-          axios.post('https://inventory.dev.web.kameya.if.ua/app/change', moveAnswers, axiosConfig).then((res) => {
+          axios.post(`${baseURL}app/change`, moveAnswers, axiosConfig).then((res) => {
             console.log(res)
             if (res.status === 200) {
               toast('Елемент успішно переміщено')
@@ -129,7 +129,7 @@ const AddInventory = ({ edit, move, id }) => {
         return
       }
       answers = {...answers, hasChange: false, lastChange: null}
-      axios.post(`https://inventory.dev.web.kameya.if.ua/app/item`, answers, axiosConfig).then((res) => {
+      axios.post(`${baseURL}app/item`, answers, axiosConfig).then((res) => {
 
         if (res.status === 200) {
           toast('Елемент успішно додано')
@@ -153,7 +153,7 @@ const AddInventory = ({ edit, move, id }) => {
   };
 
   return (
-    <div className="flex flex-col w-full h-screen items-center bg-yellow-50">
+    <div className="flex flex-col w-full h-full items-center bg-yellow-50">
       <div className="formWrapper max-w-xs">
         <h1 className="text-2xl text-center p-2 text-red-950">
           <strong>{edit ? "Редагувати " : move ? "Перемістити" : "Додати "} Інвентар</strong>

@@ -7,3 +7,5 @@ export const axiosConfig = {
       password: '27071996uA'
     }
   };
+
+export const baseURL = 'https://inventory.dev.web.kameya.if.ua/'

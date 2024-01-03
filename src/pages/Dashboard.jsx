@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import ItemCard from "../componets/ItemCard";
 import axios from 'axios'
-import { axiosConfig } from "../utils/axiosConfig";
+import { axiosConfig, baseURL } from "../utils/axiosConfig";
 import { SubDataContext } from "../App";
 
 const Dashboard = () => {
@@ -18,9 +18,9 @@ const Dashboard = () => {
 
   const fetchItemsWithProblem = () => {
     axios.all([
-      axios.get('https://inventory.dev.web.kameya.if.ua/app/item?count=20&order=place&filter=status=В ремонті', axiosConfig),
-      axios.get('https://inventory.dev.web.kameya.if.ua/app/item?count=20&order=place&filter=status=Зламаний', axiosConfig),
-      axios.get('https://inventory.dev.web.kameya.if.ua/app/item?count=20&order=place&filter=status=Під оновлення', axiosConfig),
+      axios.get(`${baseURL}app/item?count=20&order=place&filter=status=В ремонті`, axiosConfig),
+      axios.get(`${baseURL}app/item?count=20&order=place&filter=status=Зламаний`, axiosConfig),
+      axios.get(`${baseURL}app/item?count=20&order=place&filter=status=Під оновлення`, axiosConfig),
     ]).then(axios.spread((inRepair, broken, reNew) => {
       setInRepair(inRepair.data)
       setBroken(broken.data)
@@ -33,12 +33,12 @@ const Dashboard = () => {
       setDsblbtn(false)
       setItemsToFetch(20)
     }
-    axios.get(`https://inventory.dev.web.kameya.if.ua/app/item?count=${count}&order=place${selectedShop === "Всі" ? '' : `&filter=place=${selectedShop}`}${selectedCategory === "Виберіть" ? '' : selectedShop !== "Всі" ? `,category=${selectedCategory}` : `&filter=category=${selectedCategory}`}`, axiosConfig).then((res) => {
+    axios.get(`${baseURL}app/item?count=${count}&order=place${selectedShop === "Всі" ? '' : `&filter=place=${selectedShop}`}${selectedCategory === "Виберіть" ? '' : selectedShop !== "Всі" ? `,category=${selectedCategory}` : `&filter=category=${selectedCategory}`}`, axiosConfig).then((res) => {
       if (res.status === 200) {
         setItems(res.data)
       }
     })
-    fetchItemsWithProblem()
+    // fetchItemsWithProblem()
   }
 
   useEffect(() => {
@@ -123,7 +123,7 @@ const Dashboard = () => {
         <div className="flex justify-center mt-6">
           <div className="flex flex-col md:flex-row">
             <div className="my-2">
-              <span className="mx-4 mb-1 text-red-950"><strong>Виберіть магазин:</strong></span>
+              <span className="mx-4 mb-1 text-red-950"><strong>Виберіть підрозділ:</strong></span>
               <select
                 className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
                 value={selectedShop}
@@ -159,10 +159,11 @@ const Dashboard = () => {
 
         <section className="dashboard bg-yellow-50 p-4">
           <p className="text-red-950 text-lg text-center py-3">
-            Техніка з магазину: <strong>{selectedShop}</strong>
+            Техніка з підрозділу: <strong>{selectedShop}</strong>
           </p>
           <div className="inrepairWrapper flex gap-5 flex-wrap justify-center">
-            {items.length &&
+          {!items.length && ('Техніки не знайдено')}
+            {items.length > 0 &&
               items.map((item, idx) => <ItemCard itemsToFetch={itemsToFetch} fetchData={fetchData} key={item.id} item={item} />)}
           </div>
           <div className="flex w-full justify-center my-10">

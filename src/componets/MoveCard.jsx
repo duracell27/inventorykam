@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ArrowRight from "../componets/icons/ArrowRight";
 import axios from "axios";
-import { axiosConfig } from "../utils/axiosConfig";
+import { axiosConfig, baseURL } from "../utils/axiosConfig";
 
 const colorsForChangeType = {
   status: "bg-sky-300",
@@ -19,7 +19,7 @@ const MoveCard = ({ item }) => {
   };
 
   useEffect(()=>{
-    axios.get(`https://inventory.dev.web.kameya.if.ua/app/change?order=timestamp&reverse&filter=item=${item.id}`, axiosConfig).then((res)=>{
+    axios.get(`${baseURL}app/change?order=timestamp&reverse&filter=item=${item.id}`, axiosConfig).then((res)=>{
       console.log(res)
       if (res.status === 200) {
         setChanges(res.data)

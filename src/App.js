@@ -7,7 +7,7 @@ import Edit from "./pages/Edit";
 import Move from "./pages/Move";
 import { Toaster } from 'react-hot-toast';
 import { createContext, useEffect, useState } from "react";
-import { axiosConfig } from "./utils/axiosConfig";
+import { axiosConfig, baseURL } from "./utils/axiosConfig";
 import axios from "axios";
 
 export const SubDataContext = createContext()
@@ -20,10 +20,10 @@ function App() {
   const [statuses, setStatuses] = useState([]);
 
   const fetchSubdata = () => {
-    axios.all([axios.get('https://inventory.dev.web.kameya.if.ua/app/category', axiosConfig),
-    axios.get('https://inventory.dev.web.kameya.if.ua/app/place', axiosConfig),
-    axios.get('https://inventory.dev.web.kameya.if.ua/app/subplace', axiosConfig),
-    axios.get('https://inventory.dev.web.kameya.if.ua/app/status', axiosConfig)]).then(axios.spread((category, place, subplace, status) => {
+    axios.all([axios.get(`${baseURL}app/category?order=name`, axiosConfig),
+    axios.get(`${baseURL}app/place?order=name`, axiosConfig),
+    axios.get(`${baseURL}app/subplace?order=name`, axiosConfig),
+    axios.get(`${baseURL}app/status?order=name`, axiosConfig)]).then(axios.spread((category, place, subplace, status) => {
       setCategories(category.data)
       setPlaces(place.data)
       setSubplaces(subplace.data)
