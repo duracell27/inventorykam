@@ -5,11 +5,22 @@ import { useNavigate } from "react-router-dom";
 import { axiosConfig, baseURL } from "../utils/axiosConfig";
 import { SubDataContext } from "../App";
 
-const getFormattedDate = () => {
-  let currentDate = new Date();
-  let year = currentDate.getFullYear();
-  let month = String(currentDate.getMonth() + 1).padStart(2, "0");
-  let day = String(currentDate.getDate()).padStart(2, "0");
+const getFormattedDate = (dateIn) => {
+  console.log('date',dateIn)
+  if(dateIn === null){
+    return '';
+  }
+  // let currentDate = new Date();
+  let dateToConvert 
+  if(dateIn){
+    dateToConvert = new Date(dateIn)
+  }else{
+    dateToConvert = new Date()
+  }
+
+  let year = dateToConvert.getFullYear();
+  let month = String(dateToConvert.getMonth() + 1).padStart(2, "0");
+  let day = String(dateToConvert.getDate()).padStart(2, "0");
 
   let formattedDate = `${year}-${month}-${day}`;
 
@@ -63,12 +74,12 @@ const AddInventory = ({ edit, move, id }) => {
 
   const handleSubmit = () => {
     let answers = {
-      name,
-      firm,
-      model,
-      serial,
+      name: name.trim(),
+      firm: firm.trim(),
+      model: model.trim(),
+      serial: serial.trim(),
       date: date === "" ? null : date,
-      warranty,
+      warranty: warranty.trim(),
       status,
       place,
       subplace,
@@ -78,7 +89,7 @@ const AddInventory = ({ edit, move, id }) => {
     
 
     if (edit && id) {
-      if (name.length < 3 || firm.length < 3 || model.length < 3 || serial.length < 3 || category === "Виберіть") {
+      if (name.length < 1 || firm.length < 1 || model.length < 1 || serial.length < 1 || category === "Виберіть") {
         toast.error('Заповніть всі обов\'язкові поля')
         return
       }
@@ -124,7 +135,7 @@ const AddInventory = ({ edit, move, id }) => {
         }
       }).catch((error) => toast(error))
     } else {
-      if (name.length < 3 || firm.length < 3 || model.length < 3 || serial.length < 3 || status === 'Виберіть' || place === "Виберіть" || category === "Виберіть") {
+      if (name.length < 1 || firm.length < 1 || model.length < 1 || serial.length < 1 || status === 'Виберіть' || place === "Виберіть" || category === "Виберіть") {
         toast.error('Заповніть всі обов\'язкові поля')
         return
       }

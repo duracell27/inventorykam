@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import ItemCard from "../componets/ItemCard";
 import axios from 'axios'
 import { axiosConfig, baseURL } from "../utils/axiosConfig";
 import { SubDataContext } from "../App";
 
 const Dashboard = () => {
+  let [searchParams, setSearchParams] = useSearchParams();
   const [items, setItems] = useState([]);
-  const [selectedShop, setSelectedShop] = useState("Всі");
-  const [selectedCategory, setSelectedCategory] = useState("Виберіть");
+  const [selectedShop, setSelectedShop] = useState(searchParams.get('shop') || "Всі");
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || "Виберіть");
   const [itemsToFetch, setItemsToFetch] = useState(20)
   const [dsblbtn, setDsblbtn] = useState(false)
   const [inRepair, setInRepair] = useState([])
@@ -15,6 +17,9 @@ const Dashboard = () => {
   const [reNew, setReNew] = useState([])
 
   const { places, categories } = useContext(SubDataContext)
+  // const navigate = useNavigate()
+  // let searchParamCategory = searchParams.get('category')
+  // let searchParamShop = searchParams.get('shop')
 
   const fetchItemsWithProblem = () => {
     axios.all([
@@ -27,23 +32,38 @@ const Dashboard = () => {
       setReNew(reNew.data)
     }))
   }
+  useEffect(()=>{
+    fetchItemsWithProblem()
+  },[])
 
   const fetchData = (count) => {
     if (dsblbtn === true) {
       setDsblbtn(false)
       setItemsToFetch(20)
     }
-    axios.get(`${baseURL}app/item?count=${count}&order=place${selectedShop === "Всі" ? '' : `&filter=place=${selectedShop}`}${selectedCategory === "Виберіть" ? '' : selectedShop !== "Всі" ? `,category=${selectedCategory}` : `&filter=category=${selectedCategory}`}`, axiosConfig).then((res) => {
+    axios.get(`${baseURL}app/item?count=${count}&order=place${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Виберіть" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
       if (res.status === 200) {
         setItems(res.data)
       }
     })
     // fetchItemsWithProblem()
   }
+  useEffect(()=>{
+    fetchData(itemsToFetch)
+  },[searchParams, itemsToFetch])
 
   useEffect(() => {
-    fetchData(itemsToFetch)
-    fetchItemsWithProblem()
+    
+    // fetchItemsWithProblem()
+
+    // navigate({
+    //   pathname: '/',
+    //   search: `?category=${selectedCategory}&shop=${selectedShop}`,
+    // })
+    setSearchParams({category: selectedCategory, shop: selectedShop})
+
+    
+
   }, [itemsToFetch, selectedCategory, selectedShop])
 
   const handleItemsToFetch = () => {
@@ -56,7 +76,7 @@ const Dashboard = () => {
         <div className="border-b-2 border-red-950 pb-4"></div>
         <div className="flex justify-center flex-wrap">
           {/* секція для техніки в ремонті */}
-          <section className="dashboard p-4 w-[320px]">
+          <section className="dashboard p-4">
             <p className="text-red-950 text-lg">
               <strong>Техніка в ремонті:</strong>{" "}
             </p>
@@ -74,7 +94,7 @@ const Dashboard = () => {
             </div>
           </section>
           {/* секція для Поламана техніка */}
-          <section className="dashboard p-4 w-[320px]">
+          <section className="dashboard p-4 ">
             <p className="text-red-950 text-lg">
               {" "}
               <strong>Поламана техніка:</strong>
@@ -94,7 +114,7 @@ const Dashboard = () => {
             </div>
           </section>
           {/* секція для під оновлення техніка */}
-          <section className="dashboard p-4 w-[320px]">
+          <section className="dashboard p-4 ">
             <p className="text-red-950 text-lg">
               {" "}
               <strong>Під оновлення:</strong>

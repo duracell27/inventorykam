@@ -38,13 +38,20 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
   };
 
   function getWarrantyTime(buyDate, amountOfmanth) {
-    if (!buyDate) {
+    if(new Date(buyDate) > new Date()){
+      return(
+      <span className="px-1 rounded-lg bg-red-600 text-sm text-white">
+          не коректна дата
+        </span>)
+    }
+    if (!buyDate || !amountOfmanth) {
       return (
         <span className="px-1 rounded-lg bg-yellow-200 text-sm">
           не визначено
         </span>
       );
     }
+   
     // Перетворюємо рядок з датою у об'єкт Date
     let date = new Date(buyDate);
 
@@ -96,9 +103,9 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
           {item.status}
         </div>
       </div>
-      <span className="text-xs text-gray-600 line-clamp-1 overflow-hidden px-2 mb-2">
-        Модель: {item.model}
-        {item.serial !== "Невідомо" ? ` -> SN: ${item.serial}` : ""}
+      <span className="text-sm text-gray-600 line-clamp-1 overflow-hidden px-2 mb-2">
+        <span className="text-sm font-bold">{item.firm}</span>
+        {item.model !== "Невідомо" ? ` : ${item.model}` : ""}
       </span>
       <div className="border-b-[1px] border-red-950"></div>
 
@@ -152,7 +159,7 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
             <strong>Дата покупки</strong> : {showDate(item.date)}
           </span>
           <span className="text-xs block py-1 ">
-            <strong>Термін гарантії</strong> : {item.warranty === null ? "не вказано" : `${item.warranty} міс.`}
+            <strong>Термін гарантії</strong> : {(item.warranty === null||item.warranty === '') ? "не вказано" : `${item.warranty} міс.`}
           </span>
         </div>
         {/* {Object.keys(item).map((itemKey) => (
