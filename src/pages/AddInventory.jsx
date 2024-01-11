@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { axiosConfig, baseURL } from "../utils/axiosConfig";
 import { SubDataContext } from "../App";
+import TextareaAutosize from 'react-textarea-autosize';
 
 const getFormattedDate = (dateIn) => {
 
@@ -298,13 +299,18 @@ const AddInventory = ({ edit, move, id }) => {
 
           <label>
             Коментар
-            <input
+            {/* <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               type="text"
               placeholder="Коментар"
               className="w-full p-2 border border-red-950 rounded-lg my-1"
-            />
+            /> */}
+            <TextareaAutosize value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              type="text"
+              placeholder="Коментар"
+              className="w-full p-2 border border-red-950 rounded-lg my-1"/>
           </label></>) : null}
 
 

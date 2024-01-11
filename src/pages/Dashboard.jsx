@@ -82,13 +82,13 @@ const Dashboard = () => {
     <>
       <div className="bg-yellow-50 h-screen">
         <div className="border-b-2 border-red-950 pb-4"></div>
-        <div className="flex justify-center flex-wrap">
+        <div className="flex justify-start flex-nowrap overflow-x-auto">
           {/* секція для техніки в ремонті */}
           <section className="dashboard p-4">
             <p className="text-red-950 text-lg">
               <strong>Техніка в ремонті:</strong>{" "}
             </p>
-            <div className="inrepairWrapper flex gap-3 flex-wrap items-start">
+            <div className="inrepairWrapper flex gap-3 flex-nowrap items-start">
               {!inRepair.length && ('Немає техніки в ремонті')}
               {inRepair.length > 0 &&
                 inRepair.map((item) => (
@@ -107,7 +107,7 @@ const Dashboard = () => {
               {" "}
               <strong>Поламана техніка:</strong>
             </p>
-            <div className="inrepairWrapper flex gap-3 flex-wrap items-start">
+            <div className="inrepairWrapper flex gap-3 flex-nowrap items-start">
               {!broken.length && ('Немає зламаної техніки')}
               {broken.length > 0 &&
                 broken.map((item) => (
@@ -127,7 +127,7 @@ const Dashboard = () => {
               {" "}
               <strong>Під оновлення:</strong>
             </p>
-            <div className="inrepairWrapper flex gap-3 flex-wrap items-start">
+            <div className="inrepairWrapper flex gap-3 flex-nowrap items-start">
               {!reNew.length && ('Немає техніки під оновлення')}
               {reNew.length > 0 &&
                 reNew.map((item) => (
@@ -151,7 +151,7 @@ const Dashboard = () => {
         <div className="flex justify-center mt-6">
           <div className="flex flex-col md:flex-row">
             <div className="my-2">
-              <span className="mx-4 mb-1 text-red-950"><strong>Не вибрано підрозділ:</strong></span>
+              <span className="mx-4 mb-1 text-red-950"><strong>Виберіть підрозділ:</strong></span>
               <select
                 className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
                 value={selectedShop}
@@ -165,7 +165,7 @@ const Dashboard = () => {
               </select>
             </div>
             <div className="my-2">
-              <span className="mx-4 mb-1 text-red-950"><strong>Не вибрано категорію:</strong></span>
+              <span className="mx-4 mb-1 text-red-950"><strong>Виберіть категорію:</strong></span>
               <select
                 className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
                 value={selectedCategory}
