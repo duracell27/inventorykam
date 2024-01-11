@@ -161,6 +161,11 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
           <span className="text-xs block py-1 ">
             <strong>Термін гарантії</strong> : {(item.warranty === null||item.warranty === '') ? "не вказано" : `${item.warranty} міс.`}
           </span>
+          {item.comment !=='' && (
+            <span className="text-xs block py-1 ">
+            <strong>Коментар</strong> : {item.comment}
+          </span>
+          )}
         </div>
         {/* {Object.keys(item).map((itemKey) => (
           <span key={itemKey} className="text-xs block py-1 ">

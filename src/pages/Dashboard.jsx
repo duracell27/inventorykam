@@ -9,7 +9,7 @@ const Dashboard = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const [items, setItems] = useState([]);
   const [selectedShop, setSelectedShop] = useState(searchParams.get('shop') || "Всі");
-  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || "Виберіть");
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || "Не вибрано");
   const [itemsToFetch, setItemsToFetch] = useState(20)
   const [dsblbtn, setDsblbtn] = useState(false)
   const [inRepair, setInRepair] = useState([])
@@ -36,12 +36,20 @@ const Dashboard = () => {
     fetchItemsWithProblem()
   },[])
 
+  const handleFetchAll = () =>{
+    axios.get(`${baseURL}app/item?order=place${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Не вибрано" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
+      if (res.status === 200) {
+        setItems(res.data)
+      }
+    })
+  }
+
   const fetchData = (count) => {
     if (dsblbtn === true) {
       setDsblbtn(false)
       setItemsToFetch(20)
     }
-    axios.get(`${baseURL}app/item?count=${count}&order=place${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Виберіть" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
+    axios.get(`${baseURL}app/item?count=${count}&order=place${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Не вибрано" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
       if (res.status === 200) {
         setItems(res.data)
       }
@@ -143,7 +151,7 @@ const Dashboard = () => {
         <div className="flex justify-center mt-6">
           <div className="flex flex-col md:flex-row">
             <div className="my-2">
-              <span className="mx-4 mb-1 text-red-950"><strong>Виберіть підрозділ:</strong></span>
+              <span className="mx-4 mb-1 text-red-950"><strong>Не вибрано підрозділ:</strong></span>
               <select
                 className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
                 value={selectedShop}
@@ -157,13 +165,13 @@ const Dashboard = () => {
               </select>
             </div>
             <div className="my-2">
-              <span className="mx-4 mb-1 text-red-950"><strong>Виберіть категорію:</strong></span>
+              <span className="mx-4 mb-1 text-red-950"><strong>Не вибрано категорію:</strong></span>
               <select
                 className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
-                <option value="Виберіть">Виберіть</option>
+                <option value="Не вибрано">Не вибрано</option>
                 {categories.length && categories.map((category) => (
                   <option key={category.id} value={category.name}>{category.name}</option>
                 ))}
@@ -186,8 +194,9 @@ const Dashboard = () => {
             {items.length > 0 &&
               items.map((item, idx) => <ItemCard itemsToFetch={itemsToFetch} fetchData={fetchData} key={item.id} item={item} />)}
           </div>
-          <div className="flex w-full justify-center my-10">
+          <div className="flex w-full justify-center my-10 gap-4">
             <button onClick={handleItemsToFetch} disabled={items.length % 20 > 0} className="p-2 bg-red-950 rounded-lg text-white disabled:bg-slate-500 ">Загрузити ще</button>
+            <button onClick={handleFetchAll} className="p-2 bg-red-950 rounded-lg text-white disabled:bg-slate-500 ">Загрузити всі</button>
           </div>
         </section>
       </div>

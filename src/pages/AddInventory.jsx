@@ -6,15 +6,15 @@ import { axiosConfig, baseURL } from "../utils/axiosConfig";
 import { SubDataContext } from "../App";
 
 const getFormattedDate = (dateIn) => {
-  
-  if(dateIn === null){
+
+  if (dateIn === null) {
     return '';
   }
   // let currentDate = new Date();
-  let dateToConvert 
-  if(dateIn){
+  let dateToConvert
+  if (dateIn) {
     dateToConvert = new Date(dateIn)
-  }else{
+  } else {
     dateToConvert = new Date()
   }
 
@@ -39,14 +39,15 @@ const AddInventory = ({ edit, move, id }) => {
   const [serial, setSerial] = useState("");
   const [date, setDate] = useState("");
   const [warranty, setWarranty] = useState("");
-  const [status, setStatus] = useState("Виберіть");
-  const [place, setPlace] = useState("Виберіть");
-  const [subplace, setSubplace] = useState("Виберіть");
-  const [category, setCategory] = useState("Виберіть");
+  const [status, setStatus] = useState("Не вибрано");
+  const [place, setPlace] = useState("Не вибрано");
+  const [subplace, setSubplace] = useState("Не вибрано");
+  const [category, setCategory] = useState("Не вибрано");
+  const [comment, setComment] = useState("");
 
-  const [oldStatus, setOldStatus] = useState("Виберіть");
-  const [oldPlace, setOldPlace] = useState("Виберіть");
-  const [oldSubplace, setOldSubplace] = useState("Виберіть");
+  const [oldStatus, setOldStatus] = useState("Не вибрано");
+  const [oldPlace, setOldPlace] = useState("Не вибрано");
+  const [oldSubplace, setOldSubplace] = useState("Не вибрано");
 
   useEffect(() => {
     if ((edit || move) && id) {
@@ -58,11 +59,12 @@ const AddInventory = ({ edit, move, id }) => {
           setModel(res.data.model)
           setSerial(res.data.serial)
           setDate(getFormattedDate(res.data.date))
-          setWarranty(res.data.warranty === null ? '':res.data.warranty)
+          setWarranty(res.data.warranty === null ? '' : res.data.warranty)
           setStatus(res.data.status)
           setPlace(res.data.place)
           setSubplace(res.data.subplace)
           setCategory(res.data.category)
+          setComment(res.data.comment)
 
           setOldStatus(res.data.status)
           setOldPlace(res.data.place)
@@ -84,12 +86,13 @@ const AddInventory = ({ edit, move, id }) => {
       place,
       subplace,
       category,
-      timestamp: new Date()
+      timestamp: new Date(),
+      comment
     };
-    
+
 
     if (edit && id) {
-      if (name.length < 1 || firm.length < 1 || model.length < 1 || serial.length < 1 || category === "Виберіть") {
+      if (name.length < 1 || firm.length < 1 || model.length < 1 || serial.length < 1 || category === "Не вибрано") {
         toast.error('Заповніть всі обов\'язкові поля')
         return
       }
@@ -102,7 +105,7 @@ const AddInventory = ({ edit, move, id }) => {
         }
       }).catch((error) => toast(error))
     } else if (move && id) {
-      if (status === 'Виберіть' || place === "Виберіть") {
+      if (status === 'Не вибрано' || place === "Не вибрано") {
         toast.error('Заповніть всі обов\'язкові поля')
         return
       }
@@ -135,11 +138,11 @@ const AddInventory = ({ edit, move, id }) => {
         }
       }).catch((error) => toast(error))
     } else {
-      if (name.length < 1 || firm.length < 1 || model.length < 1 || serial.length < 1 || status === 'Виберіть' || place === "Виберіть" || category === "Виберіть") {
+      if (name.length < 1 || firm.length < 1 || model.length < 1 || serial.length < 1 || status === 'Не вибрано' || place === "Не вибрано" || category === "Не вибрано") {
         toast.error('Заповніть всі обов\'язкові поля')
         return
       }
-      answers = {...answers, hasChange: false, lastChange: null}
+      answers = { ...answers, hasChange: false, lastChange: null }
       axios.post(`${baseURL}app/item`, answers, axiosConfig).then((res) => {
 
         if (res.status === 200) {
@@ -151,10 +154,11 @@ const AddInventory = ({ edit, move, id }) => {
           setSerial("");
           setDate("");
           setWarranty("");
-          setStatus("Виберіть");
-          setPlace("Виберіть");
-          setSubplace("Виберіть");
-          setCategory("Виберіть");
+          setStatus("Не вибрано");
+          setPlace("Не вибрано");
+          setSubplace("Не вибрано");
+          setCategory("Не вибрано");
+          setComment("");
         } else {
           toast('Сумно, нічого не получилось з того')
         }
@@ -236,13 +240,14 @@ const AddInventory = ({ edit, move, id }) => {
               onChange={(e) => setCategory(e.target.value)}
               className="w-full p-2 border border-red-950 my-1 rounded-lg"
             >
-              <option value="Виберіть">Виберіть</option>
+              <option value="Не вибрано">Не вибрано</option>
               {categories.length && categories.map((category) => (
                 <option key={category.id} value={category.name}>{category.name}</option>
               ))}
 
             </select>
-          </label></>) : null}
+          </label>
+        </>) : null}
 
         {!edit ? (<><label>
           Статус *
@@ -251,7 +256,7 @@ const AddInventory = ({ edit, move, id }) => {
             onChange={(e) => setStatus(e.target.value)}
             className="w-full p-2 border border-red-950 my-1 rounded-lg"
           >
-            <option value="Виберіть">Виберіть</option>
+            <option value="Не вибрано">Не вибрано</option>
             {statuses.length && statuses.map((status) => (
               <option key={status.id} value={status.name}>{status.name}</option>
             ))}
@@ -265,7 +270,7 @@ const AddInventory = ({ edit, move, id }) => {
               onChange={(e) => setPlace(e.target.value)}
               className="w-full p-2 border border-red-950 my-1 rounded-lg"
             >
-              <option value="Виберіть">Виберіть</option>
+              <option value="Не вибрано">Не вибрано</option>
               {places.length && places.map((place) => (
                 <option key={place.id} value={place.name}>{place.name}</option>
               ))}
@@ -279,7 +284,7 @@ const AddInventory = ({ edit, move, id }) => {
               onChange={(e) => setSubplace(e.target.value)}
               className="w-full p-2 border border-red-950 my-1 rounded-lg"
             >
-              <option value="Виберіть">Виберіть</option>
+              <option value="Не вибрано">Не вибрано</option>
               {subplaces.length && subplaces.map((subplace) => (
                 <option key={subplace.id} value={subplace.name}>{subplace.name}</option>
               ))}
@@ -288,6 +293,19 @@ const AddInventory = ({ edit, move, id }) => {
           </label></>) : (
           ''
         )}
+
+        {!move ? (<>
+
+          <label>
+            Коментар
+            <input
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              type="text"
+              placeholder="Коментар"
+              className="w-full p-2 border border-red-950 rounded-lg my-1"
+            />
+          </label></>) : null}
 
 
         <button
