@@ -6,7 +6,7 @@ import { axiosConfig, baseURL } from "../utils/axiosConfig";
 import { SubDataContext } from "../App";
 
 const getFormattedDate = (dateIn) => {
-  console.log('date',dateIn)
+  
   if(dateIn === null){
     return '';
   }
@@ -58,7 +58,7 @@ const AddInventory = ({ edit, move, id }) => {
           setModel(res.data.model)
           setSerial(res.data.serial)
           setDate(getFormattedDate(res.data.date))
-          setWarranty(res.data.warranty)
+          setWarranty(res.data.warranty === null ? '':res.data.warranty)
           setStatus(res.data.status)
           setPlace(res.data.place)
           setSubplace(res.data.subplace)
@@ -149,7 +149,7 @@ const AddInventory = ({ edit, move, id }) => {
           setFirm("");
           setModel("");
           setSerial("");
-          setDate(getFormattedDate());
+          setDate("");
           setWarranty("");
           setStatus("Виберіть");
           setPlace("Виберіть");
