@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import ItemCard from "../componets/ItemCard";
 import axios from 'axios'
 import { axiosConfig, baseURL } from "../utils/axiosConfig";
@@ -17,9 +17,8 @@ const Dashboard = () => {
   const [reNew, setReNew] = useState([])
 
   const { places, categories } = useContext(SubDataContext)
-  // const navigate = useNavigate()
-  // let searchParamCategory = searchParams.get('category')
-  // let searchParamShop = searchParams.get('shop')
+  const {category, shop} = useParams()
+  
 
   const fetchItemsWithProblem = () => {
     axios.all([
@@ -34,6 +33,9 @@ const Dashboard = () => {
   }
   useEffect(()=>{
     fetchItemsWithProblem()
+    if(category && shop){
+      setSearchParams({category: category, shop: shop})
+    }
   },[])
 
   const handleFetchAll = () =>{
@@ -82,7 +84,7 @@ const Dashboard = () => {
     <>
       <div className="bg-yellow-50 h-screen">
         <div className="border-b-2 border-red-950 pb-4"></div>
-        <div className="flex justify-start flex-nowrap overflow-x-auto">
+        <div className="flex justify-start flex-nowrap overflow-x-auto overflow-y-visible">
           {/* секція для техніки в ремонті */}
           <section className="dashboard p-4">
             <p className="text-red-950 text-lg">
@@ -189,7 +191,7 @@ const Dashboard = () => {
           <p className="text-red-950 text-lg text-center py-3">
             Техніка з підрозділу: <strong>{selectedShop}</strong>
           </p>
-          <div className="inrepairWrapper flex gap-5 flex-wrap justify-center">
+          <div className="inrepairWrapper flex gap-5 flex-wrap justify-center items-start">
           {!items.length && ('Техніки не знайдено')}
             {items.length > 0 &&
               items.map((item, idx) => <ItemCard itemsToFetch={itemsToFetch} fetchData={fetchData} key={item.id} item={item} />)}

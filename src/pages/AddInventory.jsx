@@ -6,6 +6,7 @@ import { axiosConfig, baseURL } from "../utils/axiosConfig";
 import { SubDataContext } from "../App";
 import TextareaAutosize from 'react-textarea-autosize';
 
+
 const getFormattedDate = (dateIn) => {
 
   if (dateIn === null) {
@@ -49,6 +50,7 @@ const AddInventory = ({ edit, move, id }) => {
   const [oldStatus, setOldStatus] = useState("Не вибрано");
   const [oldPlace, setOldPlace] = useState("Не вибрано");
   const [oldSubplace, setOldSubplace] = useState("Не вибрано");
+
 
   useEffect(() => {
     if ((edit || move) && id) {
@@ -99,10 +101,12 @@ const AddInventory = ({ edit, move, id }) => {
       }
       axios.put(`${baseURL}app/item/${id}`, answers, axiosConfig).then((res) => {
         if (res.status === 200) {
-          toast('Елемент успішно відредаговано')
-          navigate('/')
+          toast.success('Елемент успішно відредаговано')
+          navigate(-1)
+        }else if(res.status === 403) {
+          toast.error('У вас не достатньо прав щоб це робити')
         } else {
-          toast('Сумно, нічого не получилось з того')
+          toast.error('Сумно, нічого не получилось з того')
         }
       }).catch((error) => toast(error))
     } else if (move && id) {
@@ -128,14 +132,16 @@ const AddInventory = ({ edit, move, id }) => {
           axios.post(`${baseURL}app/change`, moveAnswers, axiosConfig).then((res) => {
             console.log(res)
             if (res.status === 200) {
-              toast('Елемент успішно переміщено')
+              toast.success('Елемент успішно переміщено')
               navigate('/')
             }
 
           })
 
+        }else if(res.status === 403) {
+          toast.error('У вас не достатньо прав щоб це робити')
         } else {
-          toast('Сумно, нічого не получилось з того')
+          toast.error('Сумно, нічого не получилось з того')
         }
       }).catch((error) => toast(error))
     } else {
@@ -147,7 +153,7 @@ const AddInventory = ({ edit, move, id }) => {
       axios.post(`${baseURL}app/item`, answers, axiosConfig).then((res) => {
 
         if (res.status === 200) {
-          toast('Елемент успішно додано')
+          toast.success('Елемент успішно додано')
 
           setName("");
           setFirm("");
@@ -160,8 +166,10 @@ const AddInventory = ({ edit, move, id }) => {
           setSubplace("Не вибрано");
           setCategory("Не вибрано");
           setComment("");
-        } else {
-          toast('Сумно, нічого не получилось з того')
+        } else if(res.status === 403) {
+          toast.error('У вас не достатньо прав щоб це робити')
+        } else{
+          toast.error('Сумно, нічого не получилось з того')
         }
 
       }).catch((error) => toast(error))

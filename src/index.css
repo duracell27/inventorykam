@@ -5,6 +5,25 @@ html{
   @apply h-full bg-yellow-50
 }
 
+::-webkit-scrollbar {
+  height: 0.5rem;
+  width: 0.5rem;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff00;
+}
+::-webkit-scrollbar-thumb {
+  background: #450A0A;
+  border-radius: 0.4rem;
+  border: 1px rgb(254 252 232) solid;
+  background-clip: padding-box;
+}
+
+* {
+  scrollbar-color: #4f4f4fa0 #ffffff00;
+  scrollbar-width: thin;
+}
+
 body {
   margin: 0;
   padding: 0;

@@ -41,7 +41,7 @@ function App() {
         <Toaster />
         <Navbar />
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/:category?/:shop?" element={<Dashboard />} />
           <Route path="/addinventory" element={<AddInventory />} />
           <Route path="/moves" element={<Moves />} />
           <Route path="/edit/:id" element={<Edit />} />

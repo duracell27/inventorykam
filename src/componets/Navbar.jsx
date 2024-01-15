@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useSearchParams } from "react-router-dom";
 import MenuIcon from "./icons/MenuIcon";
 
 const Navbar = () => {
     const [showMenu, setShowmenu] = useState(false)
+    
   return (
     <div className="bg-yellow-50">
       <nav className="flex items-center justify-between p-2 py-2 relative">
         <div className="logo">
           <p className="text-3xl text-red-950 ">
-            <Link to={"/"}>Інвентар Камея</Link>
+            <Link to={"/Не вибрано/Всі"}>Інвентар Камея</Link>
           </p>
         </div>
         <div onClick={()=>setShowmenu(!showMenu)} className="menubtn md:hidden"><MenuIcon/></div>
@@ -20,7 +21,7 @@ const Navbar = () => {
                 className={({ isActive }) =>
                   isActive ? "navLink__active" : "navLink"
                 }
-                to={"/"}
+                to={"/Не вибрано/Всі"}
               >
                 Дашборд
               </NavLink>

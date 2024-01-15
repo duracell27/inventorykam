@@ -38,9 +38,9 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
   };
 
   function getWarrantyTime(buyDate, amountOfmanth) {
-    if(new Date(buyDate) > new Date()){
-      return(
-      <span className="px-1 rounded-lg bg-red-600 text-sm text-white">
+    if (new Date(buyDate) > new Date()) {
+      return (
+        <span className="px-1 rounded-lg bg-red-600 text-sm text-white">
           не коректна дата
         </span>)
     }
@@ -51,7 +51,7 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
         </span>
       );
     }
-   
+
     // Перетворюємо рядок з датою у об'єкт Date
     let date = new Date(buyDate);
 
@@ -87,7 +87,7 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
 
   return (
     <div
-      className=" border border-red-950 rounded-xl cursor-pointer bg-yellow-100 w-[320px] shadow-md relative"
+      className=" border border-red-950 rounded-xl cursor-pointer bg-yellow-100 w-[320px] shadow-md relative overflow-hidden"
       onClick={() => setModalVisible(true)}
     >
       <div className="flex justify-between w-full items-center p-2 pb-1">
@@ -118,25 +118,26 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
         <span className="px-2 my-1 inline-block bg-yellow-300 text-gray-800 rounded-lg">
           {item.place}
         </span>
-        {item.subplace ? " -> " : ""}
-        {item.subplace ? (
-          <span className="text-xs px-2 my-1 inline-block bg-yellow-200 text-gray-800 rounded-lg">{`${item.subplace}`}</span>
+        {(item.subplace === null || item.subplace === '' || item.subplace === 'Не вибрано') ? null : (' -> ')}
+        {(item.subplace === null || item.subplace === '' || item.subplace === 'Не вибрано') ? null : (<span className="text-xs px-2 my-1 inline-block bg-yellow-200 text-gray-800 rounded-lg">{`${item.subplace}`}</span>)}
+        {/* {item.subplace ? (
+          
         ) : (
           ""
-        )}
+        )} */}
       </div>
       {/* далі модалка */}
       <div
         className={`${modalVisible ? "block" : "hidden"
-          } border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100`}
+          }  relative  border-t border-red-950  mt-1 z-10 p-2 bg-yellow-200`}
       >
         <div className="text-center">
           <strong>Загальна інформація</strong>
         </div>
-        <div onClick={(e)=>{
+        <div onClick={(e) => {
           e.stopPropagation()
           setModalVisible(false)
-        }} className="absolute right-1 top-1 bg-yellow-300 p-1 rounded-full">
+        }} className="absolute right-1 top-1 bg-yellow-400 p-1 rounded-full">
 
           <CloseIcon />
         </div>
@@ -156,15 +157,19 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
           </span>
           <div className="border-b-[1px] border-red-950"></div>
           <span className="text-xs block py-1 ">
+            <strong>Категорія</strong> : <strong>{item.category}</strong> 
+          </span>
+          <div className="border-b-[1px] border-red-950"></div>
+          <span className="text-xs block py-1 ">
             <strong>Дата покупки</strong> : {showDate(item.date)}
           </span>
           <span className="text-xs block py-1 ">
-            <strong>Термін гарантії</strong> : {(item.warranty === null||item.warranty === '') ? "не вказано" : `${item.warranty} міс.`}
+            <strong>Термін гарантії</strong> : {(item.warranty === null || item.warranty === '') ? "не вказано" : `${item.warranty} міс.`}
           </span>
-          {(item.comment !=='' && item.comment !==null) && (
+          {(item.comment !== '' && item.comment !== null) && (
             <span className="text-xs block py-1 ">
-            <strong>Коментар</strong> : {item.comment}
-          </span>
+              <strong>Коментар</strong> : {item.comment}
+            </span>
           )}
         </div>
         {/* {Object.keys(item).map((itemKey) => (

@@ -20,7 +20,7 @@ const MoveCard = ({ item }) => {
 
   useEffect(()=>{
     axios.get(`${baseURL}app/change?order=timestamp&reverse&filter=item=${item.id}`, axiosConfig).then((res)=>{
-      console.log(res)
+      
       if (res.status === 200) {
         setChanges(res.data)
       }
@@ -54,7 +54,7 @@ const MoveCard = ({ item }) => {
         } border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100`}
       >
         {changes?.map((change, indx) => (
-          <div className="border border-red-950 p-2 my-1 rounded-lg">
+          <div key={indx} className="border border-red-950 p-2 my-1 rounded-lg">
             <div className="flex items-center">
               <div className="w-2/5 text-center line-clamp-1">
                 {change.from}
