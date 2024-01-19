@@ -9,9 +9,7 @@ const Moves = () => {
     
   ]);
   useEffect(()=>{
-
     axios.get(`${baseURL}app/item?order=lastChange&reverse&filter=hasChange=true`, axiosConfig).then((res)=>{
-
       if (res.status === 200) {
         setItems(res.data)
       }

@@ -13,9 +13,11 @@ const colorsForStatus = {
   "Під списання": "bg-slate-800",
   "Під ремонт": "bg-amber-400",
   "Під оновлення": "bg-indigo-400",
+  "Невідомо": "bg-slate-500",
 };
 
 const ItemCard = ({ item, fetchData, itemsToFetch }) => {
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const deleteHandler = (id) => {
@@ -27,7 +29,12 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
         )
         .then((res) => {
           if (res.status === 200) {
-            toast.success("Елемент успішно видалений");
+            
+            axios.delete(`${baseURL}app/change?filter=item=${id}`, axiosConfig).then((res)=>{
+              if(res.status === 200){
+                toast.success("Елемент успішно видалений");
+              }
+            })
             fetchData(itemsToFetch);
           }
         })
@@ -91,14 +98,14 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
       onClick={() => setModalVisible(true)}
     >
       <div className="flex justify-between w-full items-center p-2 pb-1">
-        <div>
+        <div className="flex-1"> 
           <p className="text-md text-red-950 leading-4">
             <strong>{item.name}</strong>
           </p>
         </div>
         <div
           className={`text-center px-2 text-white ${colorsForStatus[item.status]
-            } rounded-xl line-clamp-1`}
+            } rounded-xl truncate`}
         >
           {item.status}
         </div>
@@ -157,8 +164,8 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
           </span>
           <div className="border-b-[1px] border-red-950"></div>
           <span className="text-xs block py-1 ">
-            <strong>Категорія</strong> : <strong>{item.category}</strong> 
-          </span>
+            <strong>Категорія</strong> : {item.category}
+            </span>
           <div className="border-b-[1px] border-red-950"></div>
           <span className="text-xs block py-1 ">
             <strong>Дата покупки</strong> : {showDate(item.date)}
@@ -168,16 +175,20 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
           </span>
           {(item.comment !== '' && item.comment !== null) && (
             <span className="text-xs block py-1 ">
-              <strong>Коментар</strong> : {item.comment}
+              <strong>Коментар</strong> : 
+              <p className="whitespace-pre bg-yellow-100/70 rounded-sm">{item.comment}</p>
             </span>
           )}
-        </div>
-        {/* {Object.keys(item).map((itemKey) => (
-          <span key={itemKey} className="text-xs block py-1 ">
-            
-            <strong>{itemKey}</strong> : {item[itemKey]}
+          
+          <span className="text-xs block py-1 ">
+            <strong>Останні зміни</strong> : {showDate(item.timestamp)}
           </span>
-        ))} */}
+          {item.hasChange &&  (
+            <div className="flex my-2">
+              <Link className="statusInfo cursor-pointer px-2 rounded-lg w-full text-white text-center" to={`/moves/${item.id}`}>переглянути зміни</Link>
+            </div>
+          )}
+        </div>
         <div className="flex">
           <Link
             to={`/move/${item.id}`}

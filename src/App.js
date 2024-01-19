@@ -9,6 +9,7 @@ import { Toaster } from 'react-hot-toast';
 import { createContext, useEffect, useState } from "react";
 import { axiosConfig, baseURL } from "./utils/axiosConfig";
 import axios from "axios";
+import MoveSingle from "./pages/MoveSingle";
 
 export const SubDataContext = createContext()
 
@@ -44,6 +45,7 @@ function App() {
           <Route path="/:category?/:shop?" element={<Dashboard />} />
           <Route path="/addinventory" element={<AddInventory />} />
           <Route path="/moves" element={<Moves />} />
+          <Route path="/moves/:id" element={<MoveSingle />} />
           <Route path="/edit/:id" element={<Edit />} />
           <Route path="/move/:id" element={<Move />} />
         </Routes>

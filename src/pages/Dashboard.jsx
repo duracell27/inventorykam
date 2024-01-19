@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useParams, useSearchParams } from 'react-router-dom'
 import ItemCard from "../componets/ItemCard";
 import axios from 'axios'
 import { axiosConfig, baseURL } from "../utils/axiosConfig";
@@ -39,7 +39,7 @@ const Dashboard = () => {
   },[])
 
   const handleFetchAll = () =>{
-    axios.get(`${baseURL}app/item?order=place${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Не вибрано" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
+    axios.get(`${baseURL}app/item?order=place,subplace,name${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Не вибрано" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
       if (res.status === 200) {
         setItems(res.data)
       }
@@ -51,7 +51,7 @@ const Dashboard = () => {
       setDsblbtn(false)
       setItemsToFetch(20)
     }
-    axios.get(`${baseURL}app/item?count=${count}&order=place${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Не вибрано" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
+    axios.get(`${baseURL}app/item?count=${count}&order=place,subplace,name${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Не вибрано" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
       if (res.status === 200) {
         setItems(res.data)
       }
@@ -63,17 +63,7 @@ const Dashboard = () => {
   },[searchParams, itemsToFetch])
 
   useEffect(() => {
-    
-    // fetchItemsWithProblem()
-
-    // navigate({
-    //   pathname: '/',
-    //   search: `?category=${selectedCategory}&shop=${selectedShop}`,
-    // })
     setSearchParams({category: selectedCategory, shop: selectedShop})
-
-    
-
   }, [itemsToFetch, selectedCategory, selectedShop])
 
   const handleItemsToFetch = () => {

@@ -6,7 +6,7 @@ import { axiosConfig, baseURL } from "../utils/axiosConfig";
 const colorsForChangeType = {
   status: "bg-sky-300",
   place: "bg-pink-300",
-  splace: "bg-teal-300",
+  subplace: "bg-lime-500",
 };
 
 const MoveCard = ({ item }) => {
@@ -56,7 +56,7 @@ const MoveCard = ({ item }) => {
         {changes?.map((change, indx) => (
           <div key={indx} className="border border-red-950 p-2 my-1 rounded-lg">
             <div className="flex items-center">
-              <div className="w-2/5 text-center line-clamp-1">
+              <div className="w-2/5 text-center truncate">
                 {change.from}
               </div>
               <div className="w-1/5 text-center flex flex-col">
@@ -69,7 +69,7 @@ const MoveCard = ({ item }) => {
                   <ArrowRight />
                 </span>
               </div>
-              <div className="w-2/5 text-center line-clamp-1">{change.to}</div>
+              <div className="w-2/5 text-center truncate">{change.to}</div>
             </div>
             <div className="border-b-[1px] my-2 border-red-950"></div>
             <div className="text-center bg-amber-200 rounded-lg px-2">
