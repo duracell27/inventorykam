@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation, useParams, useSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import ItemCard from "../componets/ItemCard";
 import axios from 'axios'
 import { axiosConfig, baseURL } from "../utils/axiosConfig";
@@ -15,6 +15,8 @@ const Dashboard = () => {
   const [inRepair, setInRepair] = useState([])
   const [broken, setBroken] = useState([])
   const [reNew, setReNew] = useState([])
+
+  const [search, setSearch] = useState()
 
   const { places, categories } = useContext(SubDataContext)
   const {category, shop} = useParams()
@@ -51,7 +53,7 @@ const Dashboard = () => {
       setDsblbtn(false)
       setItemsToFetch(20)
     }
-    axios.get(`${baseURL}app/item?count=${count}&order=place,subplace,name${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Не вибрано" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
+    axios.get(`${baseURL}app/item?count=${count}&order=place,subplace,name${search.length>3?`&search=${search}`:null}${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Не вибрано" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
       if (res.status === 200) {
         setItems(res.data)
       }
@@ -60,7 +62,7 @@ const Dashboard = () => {
   }
   useEffect(()=>{
     fetchData(itemsToFetch)
-  },[searchParams, itemsToFetch])
+  },[searchParams, itemsToFetch,search])
 
   useEffect(() => {
     setSearchParams({category: selectedCategory, shop: selectedShop})
@@ -141,6 +143,10 @@ const Dashboard = () => {
 
         {/* вибір магазину в селекті для фільтрації */}
         <div className="flex justify-center mt-6">
+          <div className="">
+          <span className="mx-4 mb-1 text-red-950"><strong>Пошук</strong></span>
+            <input type="text" value={search} onChange={(e)=>setSearch(e.target.value)} className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"/>
+          </div>
           <div className="flex flex-col md:flex-row">
             <div className="my-2">
               <span className="mx-4 mb-1 text-red-950"><strong>Виберіть підрозділ:</strong></span>
@@ -170,8 +176,6 @@ const Dashboard = () => {
 
               </select>
             </div>
-
-
           </div>
 
         </div>

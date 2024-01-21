@@ -48,10 +48,14 @@ const MoveCard = ({ item }) => {
         </p>
       </div>
 
+      <div className="flex my-2">
+              <Link className="statusInfo cursor-pointer px-2 rounded-lg w-full text-white text-center" to={`/iteminfo/${item.id}`}>переглянути елемент</Link>
+            </div>
+
       <div
         className={`${
           modalVisible ? "block" : "hidden"
-        } border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100`}
+        } border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100 max-h-[600px] overflow-y-scroll`}
       >
         {changes?.map((change, indx) => (
           <div key={indx} className="border border-red-950 p-2 my-1 rounded-lg">

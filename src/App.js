@@ -10,6 +10,7 @@ import { createContext, useEffect, useState } from "react";
 import { axiosConfig, baseURL } from "./utils/axiosConfig";
 import axios from "axios";
 import MoveSingle from "./pages/MoveSingle";
+import ItemSingle from "./pages/ItemSingle";
 
 export const SubDataContext = createContext()
 
@@ -44,6 +45,7 @@ function App() {
         <Routes>
           <Route path="/:category?/:shop?" element={<Dashboard />} />
           <Route path="/addinventory" element={<AddInventory />} />
+          <Route path="/iteminfo/:id" element={<ItemSingle />} />
           <Route path="/moves" element={<Moves />} />
           <Route path="/moves/:id" element={<MoveSingle />} />
           <Route path="/edit/:id" element={<Edit />} />
