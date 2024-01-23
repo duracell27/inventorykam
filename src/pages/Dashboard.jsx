@@ -16,11 +16,13 @@ const Dashboard = () => {
   const [broken, setBroken] = useState([])
   const [reNew, setReNew] = useState([])
 
-  const [search, setSearch] = useState()
+  const [search, setSearch] = useState('')
 
   const { places, categories } = useContext(SubDataContext)
-  const {category, shop} = useParams()
-  
+  const { category, shop } = useParams()
+  console.log('category', searchParams.get('category'))
+  console.log('shop', searchParams.get('shop'))
+
 
   const fetchItemsWithProblem = () => {
     axios.all([
@@ -33,14 +35,15 @@ const Dashboard = () => {
       setReNew(reNew.data)
     }))
   }
-  useEffect(()=>{
+  useEffect(() => {
     fetchItemsWithProblem()
-    if(category && shop){
-      setSearchParams({category: category, shop: shop})
+    if (category && shop) {
+      console.log('я спрацював')
+      setSearchParams({ category: category, shop: shop })
     }
-  },[])
+  }, [])
 
-  const handleFetchAll = () =>{
+  const handleFetchAll = () => {
     axios.get(`${baseURL}app/item?order=place,subplace,name${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Не вибрано" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
       if (res.status === 200) {
         setItems(res.data)
@@ -53,19 +56,27 @@ const Dashboard = () => {
       setDsblbtn(false)
       setItemsToFetch(20)
     }
-    axios.get(`${baseURL}app/item?count=${count}&order=place,subplace,name${search.length>3?`&search=${search}`:null}${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Не вибрано" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
+    axios.get(`${baseURL}app/item?count=${count}&order=place,subplace,name${search.length > 0 ? `&search=${search}` : ''}${(searchParams.get('shop') === "Всі" || searchParams.get('shop') === null) ? '' : `&filter=place=${searchParams.get('shop')}`}${(searchParams.get('category') === "Не вибрано" || searchParams.get('category') === null) ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
       if (res.status === 200) {
         setItems(res.data)
       }
     })
     // fetchItemsWithProblem()
   }
-  useEffect(()=>{
-    fetchData(itemsToFetch)
-  },[searchParams, itemsToFetch,search])
+  let timerForSearchInput;
+  useEffect(() => {
+    clearTimeout(timerForSearchInput);
+    timerForSearchInput = setTimeout(function () {
+      fetchData(itemsToFetch)
+    }, 1000);
+  }, [search])
 
   useEffect(() => {
-    setSearchParams({category: selectedCategory, shop: selectedShop})
+    fetchData(itemsToFetch)
+  }, [searchParams, itemsToFetch])
+
+  useEffect(() => {
+    setSearchParams({ category: selectedCategory, shop: selectedShop })
   }, [itemsToFetch, selectedCategory, selectedShop])
 
   const handleItemsToFetch = () => {
@@ -142,12 +153,15 @@ const Dashboard = () => {
         {/* секція всіє техніки по магазинах */}
 
         {/* вибір магазину в селекті для фільтрації */}
-        <div className="flex justify-center mt-6">
-          <div className="">
-          <span className="mx-4 mb-1 text-red-950"><strong>Пошук</strong></span>
-            <input type="text" value={search} onChange={(e)=>setSearch(e.target.value)} className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"/>
+        <div className="flex items-center flex-col mt-6">
+          <div className="m-2 flex flex-col">
+            <span className="mx-4 mb-1 text-red-950"><strong>Пошук</strong></span>
+            <div className="">
+              <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 min-w-[320px]" />
+            </div>
           </div>
-          <div className="flex flex-col md:flex-row">
+
+          <div className="flex flex-col  md:flex-row">
             <div className="my-2">
               <span className="mx-4 mb-1 text-red-950"><strong>Виберіть підрозділ:</strong></span>
               <select
@@ -186,7 +200,7 @@ const Dashboard = () => {
             Техніка з підрозділу: <strong>{selectedShop}</strong>
           </p>
           <div className="inrepairWrapper flex gap-5 flex-wrap justify-center items-start">
-          {!items.length && ('Техніки не знайдено')}
+            {!items.length && ('Техніки не знайдено')}
             {items.length > 0 &&
               items.map((item, idx) => <ItemCard itemsToFetch={itemsToFetch} fetchData={fetchData} key={item.id} item={item} />)}
           </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ArrowRight from "../componets/icons/ArrowRight";
 import axios from "axios";
 import { axiosConfig, baseURL } from "../utils/axiosConfig";
+import { Link } from "react-router-dom";
 
 const colorsForChangeType = {
   status: "bg-sky-300",
@@ -18,14 +19,14 @@ const MoveCard = ({ item }) => {
     return t.toLocaleString();
   };
 
-  useEffect(()=>{
-    axios.get(`${baseURL}app/change?order=timestamp&reverse&filter=item=${item.id}`, axiosConfig).then((res)=>{
-      
+  useEffect(() => {
+    axios.get(`${baseURL}app/change?order=timestamp&reverse&filter=item=${item.id}`, axiosConfig).then((res) => {
+
       if (res.status === 200) {
         setChanges(res.data)
       }
     })
-  },[])
+  }, [])
 
   return (
     <div
@@ -48,15 +49,15 @@ const MoveCard = ({ item }) => {
         </p>
       </div>
 
-      <div className="flex my-2">
-              <Link className="statusInfo cursor-pointer px-2 rounded-lg w-full text-white text-center" to={`/iteminfo/${item.id}`}>переглянути елемент</Link>
-            </div>
+
 
       <div
-        className={`${
-          modalVisible ? "block" : "hidden"
-        } border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100 max-h-[600px] overflow-y-scroll`}
+        className={`${modalVisible ? "block" : "hidden"
+          } border border-red-950 absolute w-full rounded-lg mt-1 z-10 p-2 bg-yellow-100 max-h-[600px] overflow-y-scroll`}
       >
+        <div className="flex mb-2 px-2 w-full justify-center">
+          <Link className="bg-yellow-200 cursor-pointer px-2 rounded-lg" to={`/iteminfo/${item.id}`}>переглянути елемент</Link>
+        </div>
         {changes?.map((change, indx) => (
           <div key={indx} className="border border-red-950 p-2 my-1 rounded-lg">
             <div className="flex items-center">

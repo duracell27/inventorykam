@@ -173,21 +173,23 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
           <span className="text-xs block py-1 ">
             <strong>Термін гарантії</strong> : {(item.warranty === null || item.warranty === '') ? "не вказано" : `${item.warranty} міс.`}
           </span>
+          <div className="border-b-[1px] border-red-950"></div>
+          <span className="text-xs block py-1 ">
+            <strong>Останні зміни</strong> : {showDate(item.timestamp)}
+          </span>
+          
           {(item.comment !== '' && item.comment !== null) && (
             <span className="text-xs block py-1 ">
               <strong>Коментар</strong> : 
               <p className="whitespace-pre bg-yellow-100/70 rounded-sm">{item.comment}</p>
             </span>
           )}
-          
-          <span className="text-xs block py-1 ">
-            <strong>Останні зміни</strong> : {showDate(item.timestamp)}
-          </span>
           {item.hasChange &&  (
             <div className="flex my-2">
               <Link className="statusInfo cursor-pointer px-2 rounded-lg w-full text-white text-center" to={`/moves/${item.id}`}>переглянути зміни</Link>
             </div>
           )}
+          
         </div>
         <div className="flex">
           <Link
