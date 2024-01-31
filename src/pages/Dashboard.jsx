@@ -1,31 +1,31 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import ItemCard from "../componets/ItemCard";
 import axios from 'axios'
 import { axiosConfig, baseURL } from "../utils/axiosConfig";
 import { SubDataContext } from "../App";
 
 const Dashboard = () => {
-  let [searchParams, setSearchParams] = useSearchParams();
+  // let [searchParams, setSearchParams] = useSearchParams();
   const [items, setItems] = useState([]);
-  // const [selectedShop, setSelectedShop] = useState(searchParams.get('shop') || "Всі");
-  // const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || "Не вибрано");
+  // const [selectedShop, setSelectedShop] = useState(selectedShop || "Всі");
+  // const [selectedCategory, setSelectedCategory] = useState(selectedCategory || "Не вибрано");
   const [itemsToFetch, setItemsToFetch] = useState(20)
   const [dsblbtn, setDsblbtn] = useState(false)
   const [inRepair, setInRepair] = useState([])
   const [broken, setBroken] = useState([])
   const [reNew, setReNew] = useState([])
 
+  const navigate = useNavigate();
+
  
   // const [search, setSearch] = useState('')
 
   const { places, categories,searchInput,setSearchInput,selectedShop,setSelectedShop,selectedCategory,setSelectedCategory } = useContext(SubDataContext)
   const { category, shop } = useParams()
-  // console.log('category', searchParams.get('category'))
-  // console.log('shop', searchParams.get('shop'))
 
 
-  const fetchItemsWithProblem = () => {
+  const fetchItemsWithProblem = async() => {
     axios.all([
       axios.get(`${baseURL}app/item?count=20&order=place&filter=status=В ремонті`, axiosConfig),
       axios.get(`${baseURL}app/item?count=20&order=place&filter=status=Зламаний`, axiosConfig),
@@ -34,18 +34,24 @@ const Dashboard = () => {
       setInRepair(inRepair.data)
       setBroken(broken.data)
       setReNew(reNew.data)
+      if (category && shop) {
+        setSelectedCategory(category)
+        setSelectedShop(shop)
+        fetchData(itemsToFetch)
+      }
     }))
   }
   useEffect(() => {
     fetchItemsWithProblem()
-    if (category && shop) {
-      console.log('я спрацював')
-      setSearchParams({ category: category, shop: shop })
-    }
+    // if (category && shop) {
+    //   setSelectedCategory(category)
+    //   setSelectedShop(shop)
+    //   fetchData(itemsToFetch)
+    // }
   }, [])
 
   const handleFetchAll = () => {
-    axios.get(`${baseURL}app/item?order=place,subplace,name${searchParams.get('shop') === "Всі" ? '' : `&filter=place=${searchParams.get('shop')}`}${searchParams.get('category') === "Не вибрано" ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
+    axios.get(`${baseURL}app/item?order=place,subplace,name${selectedShop === "Всі" ? '' : `&filter=place=${selectedShop}`}${selectedCategory === "Не вибрано" ? '' : selectedShop !== "Всі" ? `,category=${selectedCategory}` : `&filter=category=${selectedCategory}`}`, axiosConfig).then((res) => {
       if (res.status === 200) {
         setItems(res.data)
       }
@@ -57,7 +63,7 @@ const Dashboard = () => {
       setDsblbtn(false)
       setItemsToFetch(20)
     }
-    axios.get(`${baseURL}app/item?count=${count}&order=place,subplace,name${searchInput.length > 0 ? `&search=${searchInput}` : ''}${(searchParams.get('shop') === "Всі" || searchParams.get('shop') === null) ? '' : `&filter=place=${searchParams.get('shop')}`}${(searchParams.get('category') === "Не вибрано" || searchParams.get('category') === null) ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
+    axios.get(`${baseURL}app/item?count=${count}&order=place,subplace,name${searchInput.length > 0 ? `&search=${searchInput}` : ''}${(selectedShop === "Всі" || selectedShop === null) ? '' : `&filter=place=${selectedShop}`}${(selectedCategory === "Не вибрано" || selectedCategory === null) ? '' : selectedShop !== "Всі" ? `,category=${selectedCategory}` : `&filter=category=${selectedCategory}`}`, axiosConfig).then((res) => {
       if (res.status === 200) {
         setItems(res.data)
       }
@@ -75,11 +81,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchData(itemsToFetch)
-  }, [searchParams, itemsToFetch])
-
-  useEffect(() => {
-    setSearchParams({ category: selectedCategory, shop: selectedShop })
   }, [itemsToFetch, selectedCategory, selectedShop])
+
+  // useEffect(() => {
+  //   setSearchParams({ category: selectedCategory, shop: selectedShop })
+  // }, [itemsToFetch, selectedCategory, selectedShop])
 
   const handleItemsToFetch = () => {
     setItemsToFetch(itemsToFetch + 20)
@@ -169,7 +175,8 @@ const Dashboard = () => {
               <select
                 className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
                 value={selectedShop}
-                onChange={(e) => setSelectedShop(e.target.value)}
+                onChange={(e) => {setSelectedShop(e.target.value)
+                  navigate(`/${selectedCategory}/${e.target.value}`)}}
               >
                 <option value="Всі">Всі</option>
                 {places.length && places.map((place) => (
@@ -183,7 +190,8 @@ const Dashboard = () => {
               <select
                 className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onChange={(e) => {setSelectedCategory(e.target.value)
+                navigate(`/${e.target.value}/${selectedShop}`)}}
               >
                 <option value="Не вибрано">Не вибрано</option>
                 {categories.length && categories.map((category) => (

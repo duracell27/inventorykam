@@ -13,7 +13,6 @@ const ItemSingle = () => {
   ]);
   useEffect(() => {
     axios.get(`${baseURL}app/item/${id}`, axiosConfig).then((res) => {
-      console.log(res)
       if (res.status === 200) {
         let arr = []
         arr.push(res.data)

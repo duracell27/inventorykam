@@ -10,7 +10,7 @@ const Navbar = () => {
       <nav className="flex items-center justify-between p-2 py-2 relative">
         <div className="logo">
           <p className="text-3xl text-red-950 ">
-            <Link to={"/Не вибрано/Всі"}>Інвентар Камея</Link>
+            <Link to={"/"}>Інвентар Камея</Link>
           </p>
         </div>
         <div onClick={()=>setShowmenu(!showMenu)} className="menubtn md:hidden"><MenuIcon/></div>
@@ -21,7 +21,7 @@ const Navbar = () => {
                 className={({ isActive }) =>
                   isActive ? "navLink__active" : "navLink"
                 }
-                to={"/Не вибрано/Всі"}
+                to={"/"}
               >
                 Дашборд
               </NavLink>
@@ -46,6 +46,7 @@ const Navbar = () => {
                 Зміни обладнання
               </NavLink>
             </li>
+
           </ul>
         </div>
       </nav>
