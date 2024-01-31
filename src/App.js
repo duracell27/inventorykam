@@ -20,6 +20,10 @@ function App() {
   const [places, setPlaces] = useState([]);
   const [subplaces, setSubplaces] = useState([]);
   const [statuses, setStatuses] = useState([]);
+  const [searchInput, setSearchInput] = useState('')
+
+  const [selectedShop, setSelectedShop] = useState("Всі");
+  const [selectedCategory, setSelectedCategory] = useState("Не вибрано");
 
   const fetchSubdata = () => {
     axios.all([axios.get(`${baseURL}app/category?order=name`, axiosConfig),
@@ -39,7 +43,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <SubDataContext.Provider value={{categories,places,subplaces,statuses}}>
+      <SubDataContext.Provider value={{categories,places,subplaces,statuses,searchInput,setSearchInput,selectedShop,setSelectedShop,selectedCategory,setSelectedCategory}}>
         <Toaster />
         <Navbar />
         <Routes>

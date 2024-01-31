@@ -8,20 +8,21 @@ import { SubDataContext } from "../App";
 const Dashboard = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const [items, setItems] = useState([]);
-  const [selectedShop, setSelectedShop] = useState(searchParams.get('shop') || "Всі");
-  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || "Не вибрано");
+  // const [selectedShop, setSelectedShop] = useState(searchParams.get('shop') || "Всі");
+  // const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || "Не вибрано");
   const [itemsToFetch, setItemsToFetch] = useState(20)
   const [dsblbtn, setDsblbtn] = useState(false)
   const [inRepair, setInRepair] = useState([])
   const [broken, setBroken] = useState([])
   const [reNew, setReNew] = useState([])
 
-  const [search, setSearch] = useState('')
+ 
+  // const [search, setSearch] = useState('')
 
-  const { places, categories } = useContext(SubDataContext)
+  const { places, categories,searchInput,setSearchInput,selectedShop,setSelectedShop,selectedCategory,setSelectedCategory } = useContext(SubDataContext)
   const { category, shop } = useParams()
-  console.log('category', searchParams.get('category'))
-  console.log('shop', searchParams.get('shop'))
+  // console.log('category', searchParams.get('category'))
+  // console.log('shop', searchParams.get('shop'))
 
 
   const fetchItemsWithProblem = () => {
@@ -56,20 +57,21 @@ const Dashboard = () => {
       setDsblbtn(false)
       setItemsToFetch(20)
     }
-    axios.get(`${baseURL}app/item?count=${count}&order=place,subplace,name${search.length > 0 ? `&search=${search}` : ''}${(searchParams.get('shop') === "Всі" || searchParams.get('shop') === null) ? '' : `&filter=place=${searchParams.get('shop')}`}${(searchParams.get('category') === "Не вибрано" || searchParams.get('category') === null) ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
+    axios.get(`${baseURL}app/item?count=${count}&order=place,subplace,name${searchInput.length > 0 ? `&search=${searchInput}` : ''}${(searchParams.get('shop') === "Всі" || searchParams.get('shop') === null) ? '' : `&filter=place=${searchParams.get('shop')}`}${(searchParams.get('category') === "Не вибрано" || searchParams.get('category') === null) ? '' : searchParams.get('shop') !== "Всі" ? `,category=${searchParams.get('category')}` : `&filter=category=${searchParams.get('category')}`}`, axiosConfig).then((res) => {
       if (res.status === 200) {
         setItems(res.data)
       }
     })
     // fetchItemsWithProblem()
   }
-  let timerForSearchInput;
-  useEffect(() => {
-    clearTimeout(timerForSearchInput);
-    timerForSearchInput = setTimeout(function () {
+  const handleInputPress = (e)=>{
+    if(e.keyCode === 13){
       fetchData(itemsToFetch)
-    }, 1000);
-  }, [search])
+    } 
+  }
+  // useEffect(() => {
+  //   fetchData(itemsToFetch)
+  // }, [search])
 
   useEffect(() => {
     fetchData(itemsToFetch)
@@ -157,7 +159,7 @@ const Dashboard = () => {
           <div className="m-2 flex flex-col">
             <span className="mx-4 mb-1 text-red-950"><strong>Пошук</strong></span>
             <div className="">
-              <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 min-w-[320px]" />
+              <input type="text" value={searchInput} onChange={(e)=>setSearchInput(e.target.value)} onKeyDown={handleInputPress} className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 min-w-[320px]" />
             </div>
           </div>
 

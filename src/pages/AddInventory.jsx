@@ -123,20 +123,28 @@ const AddInventory = ({ edit, move, id }) => {
           }
           if (oldStatus !== status) {
             moveAnswers = { ...moveAnswers, from: oldStatus, to: status, type: 'status' }
-          } else if (oldPlace !== place) {
+            axios.post(`${baseURL}app/change`, moveAnswers, axiosConfig).then((res) => {
+              if (res.status === 200) {
+                toast.success('Статус успішно змінено')}})
+          }
+          if (oldPlace !== place) {
             moveAnswers = { ...moveAnswers, from: oldPlace, to: place, type: 'place' }
-          } else if (oldSubplace !== subplace) {
+            axios.post(`${baseURL}app/change`, moveAnswers, axiosConfig).then((res) => {
+              if (res.status === 200) {
+                toast.success('Елемент успішно переміщено')}})
+          }
+          if (oldSubplace !== subplace) {
             moveAnswers = { ...moveAnswers, from: oldSubplace, to: subplace, type: 'subplace' }
+            axios.post(`${baseURL}app/change`, moveAnswers, axiosConfig).then((res) => {
+              if (res.status === 200) {
+                toast.success('Підкатегорію успішно змінено')}})
           }
 
-          axios.post(`${baseURL}app/change`, moveAnswers, axiosConfig).then((res) => {
-            console.log(res)
-            if (res.status === 200) {
-              toast.success('Елемент успішно переміщено')
-              navigate('/')
-            }
+          // axios.post(`${baseURL}app/change`, moveAnswers, axiosConfig).then((res) => {
+          //   if (res.status === 200) {
+          //     toast.success('Елемент успішно переміщено')}})
 
-          })
+          navigate('/')
 
         }else if(res.status === 403) {
           toast.error('У вас не достатньо прав щоб це робити')
