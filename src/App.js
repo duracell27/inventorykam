@@ -1,53 +1,77 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import AddInventory from "./pages/AddInventory";
-import Navbar from './componets/Navbar'
+import Navbar from "./componets/Navbar";
 import Moves from "./pages/Moves";
 import Edit from "./pages/Edit";
 import Move from "./pages/Move";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 import { createContext, useEffect, useState } from "react";
 import { axiosConfig, baseURL } from "./utils/axiosConfig";
 import axios from "axios";
 import MoveSingle from "./pages/MoveSingle";
 import ItemSingle from "./pages/ItemSingle";
 
-export const SubDataContext = createContext()
+export const SubDataContext = createContext();
 
 function App() {
-
   const [categories, setCategories] = useState([]);
   const [places, setPlaces] = useState([]);
   const [subplaces, setSubplaces] = useState([]);
   const [statuses, setStatuses] = useState([]);
-  const [searchInput, setSearchInput] = useState('')
+  const [searchInput, setSearchInput] = useState("");
 
   const [selectedShop, setSelectedShop] = useState("Всі");
   const [selectedCategory, setSelectedCategory] = useState("Не вибрано");
+  const [selectedSubplace, setSelectedSubplace] = useState("Не вибрано");
+  const [selectedStatus, setSelectedStatus] = useState("Не вибрано");
 
   const fetchSubdata = () => {
-    axios.all([axios.get(`${baseURL}app/category?order=name`, axiosConfig),
-    axios.get(`${baseURL}app/place?order=name`, axiosConfig),
-    axios.get(`${baseURL}app/subplace?order=name`, axiosConfig),
-    axios.get(`${baseURL}app/status?order=name`, axiosConfig)]).then(axios.spread((category, place, subplace, status) => {
-      setCategories(category.data)
-      setPlaces(place.data)
-      setSubplaces(subplace.data)
-      setStatuses(status.data)
-    }))
-  }
+    axios
+      .all([
+        axios.get(`${baseURL}app/category?order=name`, axiosConfig),
+        axios.get(`${baseURL}app/place?order=name`, axiosConfig),
+        axios.get(`${baseURL}app/subplace?order=name`, axiosConfig),
+        axios.get(`${baseURL}app/status?order=name`, axiosConfig),
+      ])
+      .then(
+        axios.spread((category, place, subplace, status) => {
+          setCategories(category.data);
+          setPlaces(place.data);
+          setSubplaces(subplace.data);
+          setStatuses(status.data);
+        })
+      );
+  };
 
   useEffect(() => {
-    fetchSubdata()
-  }, [])
+    fetchSubdata();
+  }, []);
 
   return (
     <BrowserRouter>
-      <SubDataContext.Provider value={{categories,places,subplaces,statuses,searchInput,setSearchInput,selectedShop,setSelectedShop,selectedCategory,setSelectedCategory}}>
+      <SubDataContext.Provider
+        value={{
+          categories,
+          places,
+          subplaces,
+          statuses,
+          searchInput,
+          setSearchInput,
+          selectedShop,
+          setSelectedShop,
+          selectedCategory,
+          setSelectedCategory,
+          selectedSubplace,
+          setSelectedSubplace,
+          selectedStatus,
+          setSelectedStatus,
+        }}
+      >
         <Toaster />
         <Navbar />
         <Routes>
-          <Route path="/:category?/:shop?" element={<Dashboard />} />
+          <Route path="/:category?/:shop?/:subplace?/:status?" element={<Dashboard />} />
           <Route path="/addinventory" element={<AddInventory />} />
           <Route path="/iteminfo/:id" element={<ItemSingle />} />
           <Route path="/moves" element={<Moves />} />

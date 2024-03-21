@@ -8,4 +8,4 @@ export const axiosConfig = {
     }
   };
 
-export const baseURL = 'https://inventory.web.kameya.if.ua/'
+export const baseURL = 'https://inventory.dev.web.kameya.if.ua/'
