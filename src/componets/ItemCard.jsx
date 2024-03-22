@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { axiosConfig, baseURL } from "../utils/axiosConfig";
+import { axiosConfig, baseProjectURL, baseURL } from "../utils/axiosConfig";
 import CloseIcon from "./icons/CloseIcon";
+import LinkIcon from "./icons/Link";
 
 const colorsForStatus = {
   Працює: "bg-green-600",
@@ -138,7 +139,15 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
         className={`${modalVisible ? "block" : "hidden"
           }  relative  border-t border-red-950  mt-1 z-10 p-2 bg-yellow-200`}
       >
-        <div className="text-center">
+        <div onClick={(e) => {
+          e.stopPropagation()
+          navigator.clipboard.writeText(`${baseProjectURL}${item.id}`)
+          toast.success('Посилання скопійовано')
+        }} className="absolute left-1 top-1 bg-yellow-400 p-1 rounded-full">
+
+          <LinkIcon />
+        </div>
+        <div className="text-center mb-1">
           <strong>Загальна інформація</strong>
         </div>
         <div onClick={(e) => {

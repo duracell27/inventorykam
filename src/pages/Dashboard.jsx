@@ -77,21 +77,12 @@ const Dashboard = () => {
   }, []);
 
   const handleFetchAll = () => {
+    let filterStr = generateFilterStringForApi();
     axios
       .get(
         `${baseURL}app/item?order=place,subplace,name${
           searchInput.length > 0 ? `&search=${searchInput}` : ""
-        }${
-          selectedShop === "Всі" || selectedShop === null
-            ? ""
-            : `&filter=place=${selectedShop}`
-        }${
-          selectedCategory === "Не вибрано" || selectedCategory === null
-            ? ""
-            : selectedShop !== "Всі"
-            ? `,category=${selectedCategory}`
-            : `&filter=category=${selectedCategory}`
-        }`,
+        }${filterStr}`,
         axiosConfig
       )
       .then((res) => {
@@ -106,21 +97,14 @@ const Dashboard = () => {
       setDsblbtn(false);
       setItemsToFetch(20);
     }
+
+    let filterStr = generateFilterStringForApi();
+
     axios
       .get(
         `${baseURL}app/item?count=${count}&order=place,subplace,name${
           searchInput.length > 0 ? `&search=${searchInput}` : ""
-        }${
-          selectedShop === "Всі" || selectedShop === null
-            ? ""
-            : `&filter=place=${selectedShop}`
-        }${
-          selectedCategory === "Не вибрано" || selectedCategory === null
-            ? ""
-            : selectedShop !== "Всі"
-            ? `,category=${selectedCategory}`
-            : `&filter=category=${selectedCategory}`
-        }`,
+        }${filterStr}`,
         axiosConfig
       )
       .then((res) => {
@@ -128,7 +112,6 @@ const Dashboard = () => {
           setItems(res.data);
         }
       });
-    // fetchItemsWithProblem()
   };
   const handleInputPress = (e) => {
     if (e.keyCode === 13) {
@@ -138,11 +121,60 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchData(itemsToFetch);
-  }, [itemsToFetch, selectedCategory, selectedShop, selectedSubplace, selectedStatus]);
+  }, [
+    itemsToFetch,
+    selectedCategory,
+    selectedShop,
+    selectedSubplace,
+    selectedStatus,
+    searchInput
+  ]);
 
   const handleItemsToFetch = () => {
     setItemsToFetch(itemsToFetch + 20);
   };
+
+  const generateFilterStringForApi = () => {
+    let filterArray = [];
+    if (!(selectedShop === "Всі" || selectedShop === null)) {
+      filterArray.push(`place=${selectedShop}`);
+    } else {
+      filterArray = filterArray.filter((i) => !i.includes("place"));
+    }
+    if (!(selectedCategory === "Не вибрано" || selectedCategory === null)) {
+      filterArray.push(`category=${selectedCategory}`);
+    } else {
+      filterArray = filterArray.filter((i) => !i.includes("category"));
+    }
+    if (!(selectedSubplace === "Не вибрано" || selectedSubplace === null)) {
+      filterArray.push(`subplace=${selectedSubplace}`);
+    } else {
+      filterArray = filterArray.filter((i) => !i.includes("subplace"));
+    }
+    if (!(selectedStatus === "Не вибрано" || selectedStatus === null)) {
+      filterArray.push(`status=${selectedStatus}`);
+    } else {
+      filterArray = filterArray.filter((i) => !i.includes("status"));
+    }
+
+    return `&filter=${filterArray.join()}`;
+  };
+
+  const clearFilters = () => {
+    setSelectedShop('Всі')
+    setSelectedCategory('Не вибрано')
+    setSelectedSubplace('Не вибрано')
+    setSelectedStatus('Не вибрано')
+  }
+
+  const clearSearch = () => {
+    setSearchInput('')
+   
+  }
+
+  const handleSearch = () =>{
+  fetchData(itemsToFetch);
+  }
 
   return (
     <>
@@ -228,7 +260,18 @@ const Dashboard = () => {
                 onKeyDown={handleInputPress}
                 className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 min-w-[320px]"
               />
+              <button onClick={handleSearch} className="bg-red-950 p-2 rounded-lg text-white">
+                Пошук
+              </button>
             </div>
+          </div>
+          <div className="flex justify-center gap-2">
+            <button onClick={()=> clearSearch()} className="bg-red-950 rounded-lg text-white p-2">
+              очистити пошук
+            </button>
+            <button onClick={()=> clearFilters()} className="bg-red-950 rounded-lg text-white p-2">
+              очистити фільтрації
+            </button>
           </div>
 
           <div className="flex flex-col  md:flex-row">
@@ -241,7 +284,9 @@ const Dashboard = () => {
                 value={selectedShop}
                 onChange={(e) => {
                   setSelectedShop(e.target.value);
-                  navigate(`/${selectedCategory}/${e.target.value}/${selectedSubplace}/${selectedStatus}`);
+                  navigate(
+                    `/${selectedCategory}/${e.target.value}/${selectedSubplace}/${selectedStatus}`
+                  );
                 }}
               >
                 <option value="Всі">Всі</option>
@@ -262,7 +307,9 @@ const Dashboard = () => {
                 value={selectedCategory}
                 onChange={(e) => {
                   setSelectedCategory(e.target.value);
-                  navigate(`/${e.target.value}/${selectedShop}/${selectedSubplace}/${selectedStatus}`);
+                  navigate(
+                    `/${e.target.value}/${selectedShop}/${selectedSubplace}/${selectedStatus}`
+                  );
                 }}
               >
                 <option value="Не вибрано">Не вибрано</option>
@@ -284,7 +331,9 @@ const Dashboard = () => {
                 value={selectedSubplace}
                 onChange={(e) => {
                   setSelectedSubplace(e.target.value);
-                  navigate(`/${selectedCategory}/${selectedShop}/${e.target.value}/${selectedStatus}`);
+                  navigate(
+                    `/${selectedCategory}/${selectedShop}/${e.target.value}/${selectedStatus}`
+                  );
                 }}
               >
                 <option value="Не вибрано">Не вибрано</option>
@@ -305,7 +354,9 @@ const Dashboard = () => {
                 value={selectedStatus}
                 onChange={(e) => {
                   setSelectedStatus(e.target.value);
-                  navigate(`/${selectedCategory}/${selectedShop}/${selectedSubplace}/${e.target.value}`);
+                  navigate(
+                    `/${selectedCategory}/${selectedShop}/${selectedSubplace}/${e.target.value}`
+                  );
                 }}
               >
                 <option value="Не вибрано">Не вибрано</option>
@@ -321,9 +372,9 @@ const Dashboard = () => {
         </div>
 
         <section className="dashboard bg-yellow-50 p-4">
-          <p className="text-red-950 text-lg text-center py-3">
+          {/* <p className="text-red-950 text-lg text-center py-3">
             Техніка з підрозділу: <strong>{selectedShop}</strong>
-          </p>
+          </p> */}
           <div className="inrepairWrapper flex gap-5 flex-wrap justify-center items-start">
             {!items.length && "Техніки не знайдено"}
             {items.length > 0 &&
