@@ -34,7 +34,7 @@ const MoveCard = ({ item }) => {
       onClick={() => setModalVisible(!modalVisible)}
     >
       <div>
-        <p className="text-md whitespace-nowrap text-red-950 leading-4 px-2 py-2">
+        <p className="text-md whitespace-nowrap text-red-950 leading-4 px-2 py-2 truncate">
           <strong>{item.name}</strong>
         </p>
       </div>

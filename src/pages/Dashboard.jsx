@@ -74,7 +74,11 @@ const Dashboard = () => {
     //   setSelectedShop(shop)
     //   fetchData(itemsToFetch)
     // }
-  }, []);
+    if(window.location.pathname==='/'){
+      clearFilters()
+    }
+    
+  }, [window.location.pathname]);
 
   const handleFetchAll = () => {
     let filterStr = generateFilterStringForApi();
@@ -127,7 +131,7 @@ const Dashboard = () => {
     selectedShop,
     selectedSubplace,
     selectedStatus,
-    searchInput
+    searchInput,
   ]);
 
   const handleItemsToFetch = () => {
@@ -161,20 +165,19 @@ const Dashboard = () => {
   };
 
   const clearFilters = () => {
-    setSelectedShop('Всі')
-    setSelectedCategory('Не вибрано')
-    setSelectedSubplace('Не вибрано')
-    setSelectedStatus('Не вибрано')
-  }
+    setSelectedShop("Всі");
+    setSelectedCategory("Не вибрано");
+    setSelectedSubplace("Не вибрано");
+    setSelectedStatus("Не вибрано");
+  };
 
   const clearSearch = () => {
-    setSearchInput('')
-   
-  }
+    setSearchInput("");
+  };
 
-  const handleSearch = () =>{
-  fetchData(itemsToFetch);
-  }
+  const handleSearch = () => {
+    fetchData(itemsToFetch);
+  };
 
   return (
     <>
@@ -248,125 +251,143 @@ const Dashboard = () => {
 
         {/* вибір магазину в селекті для фільтрації */}
         <div className="flex items-center flex-col mt-6">
-          <div className="m-2 flex flex-col">
-            <span className="mx-4 mb-1 text-red-950">
-              <strong>Пошук</strong>
-            </span>
-            <div className="">
-              <input
-                type="text"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={handleInputPress}
-                className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 min-w-[320px]"
-              />
-              <button onClick={handleSearch} className="bg-red-950 p-2 rounded-lg text-white">
-                Пошук
-              </button>
-            </div>
-          </div>
-          <div className="flex justify-center gap-2">
-            <button onClick={()=> clearSearch()} className="bg-red-950 rounded-lg text-white p-2">
-              очистити пошук
-            </button>
-            <button onClick={()=> clearFilters()} className="bg-red-950 rounded-lg text-white p-2">
-              очистити фільтрації
-            </button>
-          </div>
-
           <div className="flex flex-col  md:flex-row">
-            <div className="my-2">
-              <span className="mx-4 mb-1 text-red-950">
-                <strong>Виберіть підрозділ:</strong>
-              </span>
-              <select
-                className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
-                value={selectedShop}
-                onChange={(e) => {
-                  setSelectedShop(e.target.value);
-                  navigate(
-                    `/${selectedCategory}/${e.target.value}/${selectedSubplace}/${selectedStatus}`
-                  );
-                }}
-              >
-                <option value="Всі">Всі</option>
-                {places.length &&
-                  places.map((place) => (
-                    <option key={place.id} value={place.name}>
-                      {place.name}
-                    </option>
-                  ))}
-              </select>
+            
+            <div className="">
+              <div className="my-2">
+                <span className="mx-4 mb-1 text-red-950">
+                  <strong>Виберіть підрозділ:</strong>
+                </span>
+                <select
+                  className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
+                  value={selectedShop}
+                  onChange={(e) => {
+                    setSelectedShop(e.target.value);
+                    navigate(
+                      `/${selectedCategory}/${e.target.value}/${selectedSubplace}/${selectedStatus}`
+                    );
+                  }}
+                >
+                  <option value="Всі">Всі</option>
+                  {places.length &&
+                    places.map((place) => (
+                      <option key={place.id} value={place.name}>
+                        {place.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="my-2">
+                <span className="mx-4 mb-1 text-red-950">
+                  <strong>Виберіть місце:</strong>
+                </span>
+                <select
+                  className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
+                  value={selectedSubplace}
+                  onChange={(e) => {
+                    setSelectedSubplace(e.target.value);
+                    navigate(
+                      `/${selectedCategory}/${selectedShop}/${e.target.value}/${selectedStatus}`
+                    );
+                  }}
+                >
+                  <option value="Не вибрано">Не вибрано</option>
+                  {subplaces.length &&
+                    subplaces.map((subplace) => (
+                      <option key={subplace.id} value={subplace.name}>
+                        {subplace.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
             </div>
-            <div className="my-2">
-              <span className="mx-4 mb-1 text-red-950">
-                <strong>Виберіть категорію:</strong>
-              </span>
-              <select
-                className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
-                value={selectedCategory}
-                onChange={(e) => {
-                  setSelectedCategory(e.target.value);
-                  navigate(
-                    `/${e.target.value}/${selectedShop}/${selectedSubplace}/${selectedStatus}`
-                  );
-                }}
-              >
-                <option value="Не вибрано">Не вибрано</option>
-                {categories.length &&
-                  categories.map((category) => (
-                    <option key={category.id} value={category.name}>
-                      {category.name}
-                    </option>
-                  ))}
-              </select>
+            <div className="">
+              <div className="my-2">
+                <span className="mx-4 mb-1 text-red-950">
+                  <strong>Виберіть категорію:</strong>
+                </span>
+                <select
+                  className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value);
+                    navigate(
+                      `/${e.target.value}/${selectedShop}/${selectedSubplace}/${selectedStatus}`
+                    );
+                  }}
+                >
+                  <option value="Не вибрано">Не вибрано</option>
+                  {categories.length &&
+                    categories.map((category) => (
+                      <option key={category.id} value={category.name}>
+                        {category.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="my-2">
+                <span className="mx-4 mb-1 text-red-950">
+                  <strong>Виберіть статус:</strong>
+                </span>
+                <select
+                  className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
+                  value={selectedStatus}
+                  onChange={(e) => {
+                    setSelectedStatus(e.target.value);
+                    navigate(
+                      `/${selectedCategory}/${selectedShop}/${selectedSubplace}/${e.target.value}`
+                    );
+                  }}
+                >
+                  <option value="Не вибрано">Не вибрано</option>
+                  {statuses.length &&
+                    statuses.map((status) => (
+                      <option key={status.id} value={status.name}>
+                        {status.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
             </div>
-
-            <div className="my-2">
-              <span className="mx-4 mb-1 text-red-950">
-                <strong>Виберіть підмісце:</strong>
-              </span>
-              <select
-                className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
-                value={selectedSubplace}
-                onChange={(e) => {
-                  setSelectedSubplace(e.target.value);
-                  navigate(
-                    `/${selectedCategory}/${selectedShop}/${e.target.value}/${selectedStatus}`
-                  );
-                }}
-              >
-                <option value="Не вибрано">Не вибрано</option>
-                {subplaces.length &&
-                  subplaces.map((subplace) => (
-                    <option key={subplace.id} value={subplace.name}>
-                      {subplace.name}
-                    </option>
-                  ))}
-              </select>
+            <div className="">
+              <div className="my-2 mx-2 ">
+              <div className="flex flex-col justify-between h-[134px]">
+              <div className=" flex flex-col">
+                <span className="leading-5 text-red-950">
+                  <strong>Пошук</strong>
+                </span>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    onKeyDown={handleInputPress}
+                    className=" p-2 rounded-lg border bg-yellow-50 border-red-950 min-w-[320px]"
+                  />
+                  <button
+                    onClick={handleSearch}
+                    className="bg-red-950 p-2 rounded-lg text-white"
+                  >
+                    Пошук
+                  </button>
+                </div>
+              </div>
+              <div className="grid grid-flow-col justify-stretch gap-2">
+                <button
+                  onClick={() => clearSearch()}
+                  className="bg-red-950 rounded-lg text-white p-2"
+                >
+                  очистити пошук
+                </button>
+                <button
+                  onClick={() => clearFilters()}
+                  className="bg-red-950 rounded-lg text-white p-2"
+                >
+                  очистити фільтрації
+                </button>
+              </div>
             </div>
-            <div className="my-2">
-              <span className="mx-4 mb-1 text-red-950">
-                <strong>Виберіть статус:</strong>
-              </span>
-              <select
-                className="mx-4 p-2 rounded-lg border bg-yellow-50 border-red-950 w-[90%]"
-                value={selectedStatus}
-                onChange={(e) => {
-                  setSelectedStatus(e.target.value);
-                  navigate(
-                    `/${selectedCategory}/${selectedShop}/${selectedSubplace}/${e.target.value}`
-                  );
-                }}
-              >
-                <option value="Не вибрано">Не вибрано</option>
-                {statuses.length &&
-                  statuses.map((status) => (
-                    <option key={status.id} value={status.name}>
-                      {status.name}
-                    </option>
-                  ))}
-              </select>
+              </div>
             </div>
           </div>
         </div>

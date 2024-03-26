@@ -315,7 +315,7 @@ const AddInventory = ({ edit, move, id }) => {
               </select>
             </label>
             {/* тут елементи для просто показу, задіслейблені нижче*/}
-            <div className="bg-yellow-200 rounded-lg">
+            {edit ? (<div className="bg-yellow-200 rounded-lg">
               <label>
                 Статус
                 <select
@@ -346,7 +346,7 @@ const AddInventory = ({ edit, move, id }) => {
                   <option>{subplace}</option>
                 </select>
               </label>
-            </div>
+            </div>):null}
             {/* тут елементи для просто показу, задіслейблені вище*/}
           </>
         ) : null}
@@ -402,7 +402,7 @@ const AddInventory = ({ edit, move, id }) => {
               </select>
             </label>
             {/* тут елементи для просто показу, задіслейблені нижче*/}
-            <div className="bg-yellow-200 rounded-lg">
+            {move?(<div className="bg-yellow-200 rounded-lg">
               <label>
                 Назва виробу
                 <input
@@ -440,7 +440,7 @@ const AddInventory = ({ edit, move, id }) => {
                   <option>{category}</option>
                 </select>
               </label>
-            </div>
+            </div>):null}
             {/* тут елементи для просто показу, задіслейблені вище*/}
           </>
         ) : (

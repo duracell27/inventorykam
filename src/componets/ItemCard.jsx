@@ -98,9 +98,9 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
       className=" border border-red-950 rounded-xl cursor-pointer bg-yellow-100 w-[320px] shadow-md relative overflow-hidden"
       onClick={() => setModalVisible(true)}
     >
-      <div className="flex justify-between w-full items-center p-2 pb-1">
+      <div className="flex justify-between w-full items-center p-2 pb-1 mb-1 h-[40px] ">
         <div className="flex-1"> 
-          <p className="text-md text-red-950 leading-4">
+          <p className="text-md text-red-950 leading-5  line-clamp-2 ">
             <strong>{item.name}</strong>
           </p>
         </div>
@@ -159,7 +159,7 @@ const ItemCard = ({ item, fetchData, itemsToFetch }) => {
         </div>
 
         <div className="">
-          <span className="text-xs block py-1 ">
+          <span className="text-xs block py-1">
             <strong>Назва</strong> : {item.name}
           </span>
           <span className="text-xs block py-1 ">
